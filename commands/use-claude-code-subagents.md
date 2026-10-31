@@ -65,12 +65,12 @@ claude -p "<brief>" --agents <temp-file> --agent <name> --model <mapped> --permi
 - Add `"tools": [...]` to the JSON when the frontmatter has a `tools:` list.
 - Editing agent → add `--permission-mode acceptEdits`. Read-only agent (`readonly: true`, or a `tools:` list without Edit/Write) → omit it. Read-only agents: file writes and edits are denied, though some harmless read-only shell commands may still be auto-allowed.
 - Never use `--dangerously-skip-permissions`. With `--permission-prompts none`, anything that would prompt is denied automatically and reported in `permission_denials`.
-- If the user names a model for one run ("scout on sonnet"), pass their model instead — full ID if they gave one, else the alias.
+- If the user names a model for one run ("<agent> on sonnet"), pass their model instead — full ID if they gave one, else the alias.
 
 ## 5. Report
 
 - If `is_error` is `true`, `result` holds an error message, not the agent's answer (e.g. an inaccessible model), and `modelUsage` is empty. Report the error and do not treat it as the agent's output.
-- Otherwise, answer from `result`, then one short line naming the model from `modelUsage` (e.g. "scout ran on claude-haiku-5-5"). Never report cost.
+- Otherwise, answer from `result`, then one short line naming the model from `modelUsage` (e.g. "test-ro ran on claude-haiku-5-5"). Never report cost.
 - `permission_denials` non-empty → say what was blocked and ask before rerunning with `--allowedTools "<tool>"` added. Otherwise say nothing about it.
 - The agent asked a question → ask the user, then continue the same agent: `claude -p "<answer>" --resume <session_id> --permission-prompts none --output-format json`. Use `--resume` for any follow-up to the same agent.
 - Parallel work: start up to 3 runs in the background (`block_until_ms: 0`) and await them.

@@ -1,0 +1,23 @@
+{
+  "name": "claude-code-subagents-for-cursor",
+  "displayName": "Claude Code Subagents for Cursor",
+  "description": "Run Cursor's custom subagents on the model in each agent file via Claude Code. Works around Cursor pinning custom subagents to the parent model.",
+  "version": "0.1.0",
+  "author": {
+    "name": "ysskrishna"
+  },
+  "homepage": "https://github.com/ysskrishna/claude-code-subagents-for-cursor",
+  "repository": "https://github.com/ysskrishna/claude-code-subagents-for-cursor",
+  "license": "MIT",
+  "commands": "./commands/",
+  "keywords": [
+    "cursor",
+    "claude-code",
+    "subagents",
+    "agents",
+    "byok",
+    "model",
+    "command",
+    "claude"
+  ]
+}

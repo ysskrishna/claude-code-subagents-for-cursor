@@ -1,0 +1,16 @@
+{
+  "name": "claude-code-subagents-for-cursor",
+  "owner": {
+    "name": "ysskrishna"
+  },
+  "metadata": {
+    "description": "Run Cursor's custom subagents on the model in each agent file via Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "claude-code-subagents-for-cursor",
+      "source": "./",
+      "description": "Run Cursor's custom subagents on the model in each agent file via Claude Code, instead of the parent model."
+    }
+  ]
+}

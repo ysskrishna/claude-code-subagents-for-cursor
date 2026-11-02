@@ -1,0 +1,67 @@
+name: Bug report
+description: A subagent did not run on the expected model, a run failed, or the skill misbehaved
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Check [Troubleshooting](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/docs/troubleshooting.md) first.
+        For a security problem, do not file an issue. See [SECURITY.md](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/SECURITY.md).
+  - type: input
+    id: cursor-version
+    attributes:
+      label: Cursor version
+      description: Cursor, then About Cursor.
+      placeholder: "3.27.22"
+    validations:
+      required: true
+  - type: input
+    id: claude-version
+    attributes:
+      label: Claude Code version
+      description: Output of `claude --version`.
+      placeholder: "2.1.310"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows (WSL)
+        - Windows (native)
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: install-route
+    attributes:
+      label: How you installed the skill
+      options:
+        - Cursor plugin
+        - skills.sh (npx skills)
+        - GitHub CLI (gh skill)
+        - Manual copy
+    validations:
+      required: true
+  - type: input
+    id: agent-model
+    attributes:
+      label: The agent's `model:` line
+      description: From the agent file, exactly as written. Leave out anything private.
+      placeholder: "model: claude-haiku-5-5-medium"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you asked, what ran, and what you expected. Paste the final `ran on ...` line if you got one.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output or error text
+      description: Remove tokens, keys and private paths first.
+      render: text

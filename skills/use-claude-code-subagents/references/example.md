@@ -24,24 +24,35 @@ You find code. Return file paths and a short summary. Never edit files.
 
 1. **Consent.** The user typed the slash name, so no confirm question.
 2. **Reply and preflight.** `Subagent mode: claude code`. `claude --version` prints 2.1.310, which is at least 2.1.281.
-3. **Resolve.** `/work/api/.cursor/agents/scout.md` is the first match. Cursor format, so it goes through `--agents`.
-4. **Map.** `claude-haiku-5-5-medium` ends in `-medium`; strip it to `claude-haiku-5-5`. `readonly: true`, so no `--permission-mode`.
-5. **Run.** Write the temp file, run, remove it:
+3. **Resolve.** `/work/api/.cursor/agents/scout.md` is the first match. The name `scout` passes the name check. Cursor format, so it goes through `--agents`. One line to the user: "`.cursor/agents/scout.md`, read-only".
+4. **Map.** `claude-haiku-5-5-medium` starts with `claude-` and ends in `-medium`; strip it to `claude-haiku-5-5`, which passes the model check. `readonly: true`, so no `--permission-mode`.
+5. **Run.** Make a folder, write the two files with the Write tool, run, remove the folder.
 
 ```bash
-f=$(mktemp "${TMPDIR:-/tmp}/claude-agents.XXXXXX")
-cat > "$f" <<'JSON'
-{ "scout": { "description": "Finds code and summarizes it. Read-only.", "prompt": "You find code. Return file paths and a short summary. Never edit files.", "model": "claude-haiku-5-5" } }
-JSON
-claude -p "$(cat <<'BRIEF'
+mktemp -d "${TMPDIR:-/tmp}/claude-subagent.XXXXXX"
+```
+
+It prints `/tmp/claude-subagent.k3Fz9a` (invented). Write `/tmp/claude-subagent.k3Fz9a/brief.txt`:
+
+```text
 Goal: find where retry settings are configured.
 Search: /work/api
 Return: up to 5 file paths, one line each, then a 2 line summary.
-BRIEF
-)" --agents "$f" --agent scout --model claude-haiku-5-5 --permission-prompts none --output-format json
-rm -f "$f"
 ```
 
-6. **Report.** The JSON has `is_error: false`, `permission_denials: []` and `modelUsage` with the single key `claude-haiku-5-5`. The reply is the contents of `result`, then one line: "scout ran on claude-haiku-5-5". Cost is not reported.
+Write `/tmp/claude-subagent.k3Fz9a/agents.json`:
 
-**If it had failed.** With `model: composer-2` the skill never calls `claude`: it runs scout through the Task tool and says "scout uses a non-Anthropic model, so it runs through Cursor's Task tool."
+```json
+{ "scout": { "description": "Finds code and summarizes it. Read-only.", "prompt": "You find code. Return file paths and a short summary. Never edit files.", "model": "claude-haiku-5-5" } }
+```
+
+Run, then clean up:
+
+```bash
+claude -p --agents "/tmp/claude-subagent.k3Fz9a/agents.json" --agent "scout" --model "claude-haiku-5-5" --permission-prompts none --output-format json < "/tmp/claude-subagent.k3Fz9a/brief.txt"
+rm -rf "/tmp/claude-subagent.k3Fz9a"
+```
+
+6. **Report.** The JSON has `is_error: false`, `permission_denials: []` and `modelUsage` with the single key `claude-haiku-5-5`. The reply is the contents of `result`, then one line: "scout ran on claude-haiku-5-5".
+
+**If it had failed.** With `model: composer-2` the skill never calls `claude`: it runs scout through the Task tool and says "scout uses a non-Anthropic model, so it runs through Cursor's Task tool." A name like `scout; ls` fails the name check the same way.

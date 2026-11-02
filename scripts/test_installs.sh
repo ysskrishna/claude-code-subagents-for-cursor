@@ -64,14 +64,14 @@ t_skills() {
   local h f; h="$(new_home skills)"; f="$(log skills)"
   (export HOME="$h" DISABLE_TELEMETRY=1; to 120 npx -y skills add "$REPO" --list) >"$f" 2>&1 || { fail skills "npx skills add --list failed"; return; }
   grep -q -- "$SKILL" "$f" || { fail skills "$SKILL not listed"; return; }
-  (export HOME="$h" DISABLE_TELEMETRY=1; to 120 npx -y skills add "$REPO" --skill "$SKILL" -a cursor -g -y) >>"$f" 2>&1 || { fail skills "npx skills add failed"; return; }
+  (export HOME="$h" DISABLE_TELEMETRY=1; to 120 npx -y skills add "$REPO" -a cursor -g -y) >>"$f" 2>&1 || { fail skills "npx skills add failed"; return; }
   check_installed skills "$h/.agents/skills/$SKILL"
 }
 
 t_gh() {
   need gh gh || return
   local h f; h="$(new_home gh)"; f="$(log gh)"
-  (export HOME="$h" GH_CONFIG_DIR="$h/gh"; to 60 gh skill install --from-local "$REPO" "$SKILL" --agent cursor --scope user) >"$f" 2>&1 || { fail gh "gh skill install failed"; return; }
+  (export HOME="$h" GH_CONFIG_DIR="$h/gh"; to 60 gh skill install --from-local "$REPO" --all --agent cursor --scope user) >"$f" 2>&1 || { fail gh "gh skill install failed"; return; }
   check_installed gh "$h/.cursor/skills/$SKILL"
 }
 

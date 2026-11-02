@@ -52,7 +52,7 @@ Agent from `.claude/agents` or `~/.claude/agents` (Claude Code format):
 claude -p "<brief>" --agent <name> --model <mapped> --permission-prompts none --output-format json
 ```
 
-Agent from `.cursor/agents` or `.codex/agents` (Cursor format): write a temp JSON file (`mktemp /tmp/claude-agents-XXXXXX.json`) holding the agent in Claude Code format, pass it, then delete it:
+Agent from `.cursor/agents` or `.codex/agents` (Cursor format): create a temp file with `mktemp "${TMPDIR:-/tmp}/claude-agents.XXXXXX"` (no `.json` suffix: macOS only randomizes trailing X's), write the agent into it as JSON in Claude Code format, pass it, then `rm -f` it after the run:
 
 ```json
 { "<name>": { "description": "<frontmatter description>", "prompt": "<body>", "model": "<mapped>" } }

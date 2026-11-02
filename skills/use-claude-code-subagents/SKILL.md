@@ -48,6 +48,8 @@ Not found means it is not a custom agent: use the Task tool as usual and say one
 | `haiku`, `sonnet`, `opus` | Pass as is. Claude Code resolves the alias to its latest (tested: `haiku` -> `claude-haiku-5-5`). |
 | full Anthropic ID (e.g. `claude-haiku-5-5`) | Pass as is. |
 
+Evidence for each row and untested edge cases: [references/model-mapping.md](references/model-mapping.md).
+
 ## 3. Brief the agent
 
 The brief has: goal, absolute paths, constraints, and the exact return format. Never paste file contents into the brief; name the files to read instead.
@@ -109,3 +111,5 @@ BRIEF
 - Version check passed; mapped model is an Anthropic ID or alias.
 - Brief sent through the quoted heredoc; temp file removed.
 - `is_error` checked; the model line comes from `modelUsage`.
+
+A full worked run, from the slash command to the model line, is in [references/example.md](references/example.md).

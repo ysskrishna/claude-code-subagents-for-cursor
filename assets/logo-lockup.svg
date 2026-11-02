@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1454 408" width="1454" height="408">
+  <rect width="1454" height="408" fill="#000"/>
+  <g transform="translate(92 92) scale(0.22)">
+    <rect x="125" y="125" width="774" height="774" rx="138" fill="none" stroke="#fff" stroke-width="46"/>
+    <g stroke="#fff" stroke-width="46" stroke-linecap="round" fill="none">
+      <line x1="330" y1="512" x2="646" y2="331"/>
+      <line x1="330" y1="512" x2="638" y2="512"/>
+      <line x1="330" y1="512" x2="646" y2="693"/>
+      <circle cx="700" cy="300" r="62"/>
+      <circle cx="700" cy="512" r="62"/>
+      <circle cx="700" cy="724" r="62"/>
+    </g>
+    <circle cx="330" cy="512" r="88" fill="#fff"/>
+  </g>
+  <text x="393" y="212" fill="#fff" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="84" font-weight="700">Claude Code Subagents</text>
+  <text x="395" y="256" fill="#9a9a9a" font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="22" letter-spacing="5.5">FOR CURSOR</text>
+</svg>

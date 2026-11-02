@@ -101,7 +101,7 @@ A full worked run is in [`example.md`](skills/use-claude-code-subagents/referenc
 - **`claude -p` skips Claude Code's workspace trust dialog.** Use this only in projects you trust.
 - The first run of `claude` in a session may show a Cursor approval prompt (Claude Code needs network and writes to `~/.claude`, outside Cursor's sandbox). Allow it once, or allowlist `claude` in Cursor's run settings.
 - The subagent sees Claude Code's MCP config, not Cursor's. An agent that relies on a Cursor-only MCP server may lack that tool.
-- A slash-invoked skill attaches to one message. The instruction stays in the chat's context, but in a very long chat run `/use-claude-code-subagents` again if the agent stops routing.
+- Cursor attaches a slash-invoked skill to that one message ([docs](https://cursor.com/docs/skills)). If the agent stops routing subagents through Claude Code later in the chat, run `/use-claude-code-subagents` again.
 
 ## Troubleshooting
 
@@ -116,8 +116,8 @@ A full worked run is in [`example.md`](skills/use-claude-code-subagents/referenc
 
 ## Platforms and tested versions
 
-- **macOS:** tested end to end (Cursor 3.27.22, Claude Code 2.1.310).
-- **Linux:** the install routes are tested in CI. Running subagents through Claude Code on Linux is not tested.
+- **macOS** (Cursor 3.27.22, Claude Code 2.1.310): the `claude` commands the skill runs, the `skills.sh` and `gh` install routes, and the validation scripts are tested. The Cursor plugin install and the slash command in the Cursor UI are checked by hand before each release.
+- **Linux:** the `skills.sh` and `gh` install routes and the validation run in CI. Running subagents through Claude Code on Linux is not tested.
 - **Windows:** untested.
 - **Cloud Agents:** not supported (no `claude` CLI there).
 

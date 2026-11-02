@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Validate the plugin: manifest JSON against Cursor's vendored schemas,
-# frontmatter on every command, and manifest/repo consistency.
+# frontmatter on every skill, and manifest/repo consistency.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
@@ -31,9 +31,9 @@ EOF
 else
     echo "SKIP manifest schema validation (python3 not installed)"; fi
 
-# 2. Every command file has name and description frontmatter
-for f in commands/*.md; do
-    [ -f "$f" ] || { echo "FAIL no command files found"; fail=1; break; }
+# 2. Every skill file has name and description frontmatter
+for f in skills/*/SKILL.md; do
+    [ -f "$f" ] || { echo "FAIL no skill files found"; fail=1; break; }
     if head -1 "$f" | grep -q '^---$'; then
         front=$(awk 'NR==1{next} /^---$/{exit} {print}' "$f")
         echo "$front" | grep -q '^name:' || { echo "FAIL $f: missing 'name' in frontmatter"; fail=1; }

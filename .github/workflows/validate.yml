@@ -5,6 +5,9 @@ on:
     branches: ["**"]
   pull_request:
   workflow_dispatch:
+  schedule:
+    # Weekly, to catch upstream drift: Cursor's plugin schemas and Claude Code's flags.
+    - cron: "23 5 * * 1"
 
 permissions:
   contents: read
@@ -18,5 +21,55 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install jsonschema
+        run: python -m pip install jsonschema
+
       - name: Validate plugin
         run: bash scripts/validate.sh
+
+  claude-flags:
+    name: Claude Code flags
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Check the flags the skill uses
+        run: bash scripts/check_claude_flags.sh
+
+  schema-drift:
+    name: Cursor schema drift
+    # Upstream changes should not fail unrelated pull requests, so check weekly and on demand.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compare vendored schemas with cursor/plugins
+        run: |
+          set -euo pipefail
+          drift=0
+          for name in plugin marketplace; do
+            curl -fsSL "https://raw.githubusercontent.com/cursor/plugins/main/schemas/${name}.schema.json" -o "$RUNNER_TEMP/${name}.schema.json"
+            if ! diff -u "schemas/${name}.schema.json" "$RUNNER_TEMP/${name}.schema.json"; then
+              echo "::error::schemas/${name}.schema.json differs from cursor/plugins main. Re-vendor it and run scripts/validate.sh."
+              drift=1
+            fi
+          done
+          exit "$drift"

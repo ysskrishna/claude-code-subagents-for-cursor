@@ -1,0 +1,66 @@
+[
+  {
+    "query": "use claude code subagents for the rest of this chat",
+    "should_trigger": true
+  },
+  {
+    "query": "why are all my cursor subagents running on opus? i set model: haiku in the agent file",
+    "should_trigger": true
+  },
+  {
+    "query": "run my scout agent on haiku, not on the parent model",
+    "should_trigger": true
+  },
+  {
+    "query": "my .cursor/agents files say model: sonnet but cursor pins them to the parent. can we go around that?",
+    "should_trigger": true
+  },
+  {
+    "query": "cursor ignores the model in my custom subagent, it bills me for opus every time",
+    "should_trigger": true
+  },
+  {
+    "query": "can you launch the test-runner subagent via claude -p so it uses its own model?",
+    "should_trigger": true
+  },
+  {
+    "query": "/use-claude-code-subagents then have the reviewer agent check src/api",
+    "should_trigger": true
+  },
+  {
+    "query": "I have a personal anthropic key in cursor and subagents always inherit the main model. fix that for this session",
+    "should_trigger": true
+  },
+  {
+    "query": "use the explore subagent to find where auth is handled",
+    "should_trigger": false
+  },
+  {
+    "query": "write me a new subagent file for reviewing SQL migrations",
+    "should_trigger": false
+  },
+  {
+    "query": "how do I install Claude Code on my laptop?",
+    "should_trigger": false
+  },
+  {
+    "query": "which model should I pick in Cursor for refactoring a big React app?",
+    "should_trigger": false
+  },
+  {
+    "query": "write a bash script that calls claude -p on every file in a folder and saves the summaries",
+    "should_trigger": false
+  },
+  {
+    "query": "how do subagents work in Claude Code itself? I'm not using Cursor",
+    "should_trigger": false
+  },
+  {
+    "query": "start a cloud agent to fix the failing CI on this branch",
+    "should_trigger": false
+  },
+  {
+    "query": "run three explore subagents in parallel to map the repo layout",
+    "should_trigger": false
+  }
+]

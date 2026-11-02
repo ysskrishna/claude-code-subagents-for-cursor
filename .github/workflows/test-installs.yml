@@ -1,0 +1,49 @@
+# Install the skill through the skills.sh and gh skill routes and check that it lands intact.
+# Runs scripts/test_installs.sh, which uses a throwaway HOME per route.
+# The Cursor plugin marketplace route needs the Cursor app, so it is tested by hand.
+name: Test installs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/**"
+      - ".cursor-plugin/**"
+      - "scripts/test_installs.sh"
+      - ".github/workflows/test-installs.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "skills/**"
+      - ".cursor-plugin/**"
+      - "scripts/test_installs.sh"
+      - ".github/workflows/test-installs.yml"
+  workflow_dispatch:
+  schedule:
+    # Weekly, to catch changes in the skills and gh CLIs.
+    - cron: "41 5 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: ${{ matrix.route }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        route: [skills, gh]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install test
+        env:
+          REQUIRE: "1"
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/test_installs.sh "${{ matrix.route }}"

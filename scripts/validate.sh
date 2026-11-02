@@ -63,6 +63,100 @@ if [ -f .cursor-plugin/marketplace.json ]; then
     [ "$mkt_name" = "claude-code-subagents-for-cursor" ] || { echo "FAIL marketplace.json name is '$mkt_name'"; fail=1; }
 fi
 
+# 3b. Skill rules: description shape, size, name, and companion files
+if command -v python3 >/dev/null 2>&1; then
+    if ! python3 - <<'EOF'
+import glob, json, os, re, sys
+
+bad = 0
+def err(msg):
+    global bad
+    print(f"FAIL {msg}")
+    bad = 1
+
+for path in sorted(glob.glob("skills/*/SKILL.md")):
+    skill_dir = os.path.dirname(path)
+    dirname = os.path.basename(skill_dir)
+    lines = open(path, encoding="utf-8").read().split("\n")
+    if lines and lines[-1] == "":
+        lines.pop()
+    end = lines.index("---", 1) if lines and lines[0] == "---" and "---" in lines[1:] else -1
+    if end < 0:
+        err(f"{path}: frontmatter is not closed")
+        continue
+    front = lines[1:end]
+
+    name = next((l.split(":", 1)[1].strip() for l in front if l.startswith("name:")), "")
+    if name != dirname:
+        err(f"{path}: name '{name}' must match directory '{dirname}'")
+
+    desc = ""
+    for i, l in enumerate(front):
+        if l.startswith("description:"):
+            rest = l.split(":", 1)[1].strip()
+            if rest in (">", "|", ">-", "|-"):
+                block = []
+                for nxt in front[i + 1:]:
+                    if nxt.startswith(" "):
+                        block.append(nxt.strip())
+                    else:
+                        break
+                desc = " ".join(block)
+            else:
+                desc = rest.strip("\"'")
+            break
+    if not desc.startswith("Use "):
+        err(f"{path}: description must start with 'Use '")
+    if not 200 <= len(desc) <= 350:
+        err(f"{path}: description is {len(desc)} chars, expected 200-350")
+    if "Skip" not in desc:
+        err(f"{path}: description needs a Skip clause")
+
+    if len(lines) > 120:
+        err(f"{path}: {len(lines)} lines, limit is 120")
+
+    if not os.path.isfile(os.path.join(skill_dir, "references", "example.md")):
+        err(f"{skill_dir}: references/example.md is required")
+
+    for link in re.findall(r"\]\((references/[^)#]+)", "\n".join(lines)):
+        if not os.path.isfile(os.path.join(skill_dir, link)):
+            err(f"{path}: broken link {link}")
+
+    ev = f"evals/{dirname}.json"
+    if not os.path.isfile(ev):
+        err(f"{ev} is required")
+    else:
+        try:
+            items = json.load(open(ev))
+            yes = sum(1 for x in items if x.get("should_trigger") is True)
+            no = sum(1 for x in items if x.get("should_trigger") is False)
+            if (yes, no) != (8, 8) or any(not x.get("query") for x in items):
+                err(f"{ev}: expected 8 should-trigger and 8 should-not-trigger queries, found {yes} and {no}")
+        except (ValueError, AttributeError) as e:
+            err(f"{ev}: invalid ({e})")
+
+if not bad:
+    print("OK  skill description, size, references and evals")
+sys.exit(bad)
+EOF
+    then fail=1; fi
+fi
+
+# 3c. Release metadata: CHANGELOG matches plugin.json, logo exists, no pipe-to-shell
+if [ -f .cursor-plugin/plugin.json ] && [ -f CHANGELOG.md ]; then
+    pver=$(python3 -c "import json; print(json.load(open('.cursor-plugin/plugin.json'))['version'])" 2>/dev/null)
+    cver=$(sed -n 's/^## \[\([0-9][0-9.]*\)\].*/\1/p' CHANGELOG.md | head -1)
+    if [ "$pver" = "$cver" ]; then echo "OK  CHANGELOG top version $cver matches plugin.json"; else echo "FAIL CHANGELOG top version '$cver' differs from plugin.json '$pver'"; fail=1; fi
+    grep -q "^\[$pver\]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/" CHANGELOG.md || { echo "FAIL CHANGELOG has no footer link for [$pver]"; fail=1; }
+    logo=$(python3 -c "import json; print(json.load(open('.cursor-plugin/plugin.json')).get('logo',''))" 2>/dev/null)
+    if [ -n "$logo" ] && [ ! -f "$logo" ]; then echo "FAIL plugin.json logo '$logo' does not exist"; fail=1; fi
+fi
+# Hermes-style scanners block installs when any file pipes a download into a shell.
+if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
+    hits=$(git ls-files -z -- . ':!scripts/validate.sh' | xargs -0 grep -nIE '(curl|wget)[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba|z)?sh' 2>/dev/null || true)
+    if [ -n "$hits" ]; then echo "FAIL pipe-to-shell found:"; echo "$hits"; fail=1; else echo "OK  no pipe-to-shell in tracked files"; fi
+fi
+
 # 4. Required files
 for f in README.md LICENSE CHANGELOG.md; do
     [ -f "$f" ] || { echo "FAIL missing $f"; fail=1; }

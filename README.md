@@ -4,137 +4,97 @@
 
 [![Validate](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/validate.yml/badge.svg)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/validate.yml) [![Test installs](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/test-installs.yml/badge.svg)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/test-installs.yml) [![License: MIT](https://img.shields.io/github/license/ysskrishna/claude-code-subagents-for-cursor)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/LICENSE) [![GitHub release](https://img.shields.io/github/v/release/ysskrishna/claude-code-subagents-for-cursor?label=release)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases) [![Author site](https://img.shields.io/badge/author-ysskrishna.space-informational)](https://ysskrishna.space)
 
+[![skills.sh](https://skills.sh/b/ysskrishna/claude-code-subagents-for-cursor)](https://skills.sh/ysskrishna/claude-code-subagents-for-cursor)
+
 A Cursor skill that runs your **custom subagents through Claude Code**, so each one runs on the `model:` written in its own agent file instead of the parent chat's model. Invoke it with `/use-claude-code-subagents`.
 
 ## Overview
 
-In Cursor, custom subagents (`.cursor/agents/*.md`, `.claude/agents/*.md`, `.codex/agents/*.md`) declare a `model:` in their frontmatter, but the Task tool runs them on the **parent chat's model** anyway. This happens:
+In Cursor, custom subagents (`.cursor/agents/*.md`, `.claude/agents/*.md`, `.codex/agents/*.md`) declare a `model:` in their frontmatter, but the Task tool runs them on the **parent chat's model** in two cases:
 
-- when a **personal Anthropic API key (BYOK)** is on. Cursor staff confirmed it ([forum thread](https://forum.cursor.com/t/opus-spawns-only-opus-subagents-despite-different-instructions/166870), 2026-07-28), and
-- when the agent's model is not reachable in Cursor (for example `model: haiku` resolves to Haiku 4.5 in Cursor, which many plans have disabled).
+- a **personal Anthropic API key (BYOK)** is on ([confirmed by Cursor staff](https://forum.cursor.com/t/opus-spawns-only-opus-subagents-despite-different-instructions/166870)), or
+- the agent's model is not enabled in Cursor.
 
-Either way, an agent you configured to run on Haiku bills at Opus rates.
+An agent you set up for Haiku then bills at Opus rates. Claude Code, run headlessly from Cursor's Shell tool, does honor the `model:` in agent files. This skill routes custom subagents through `claude -p` for the rest of the chat, and every run reports the model it actually ran on.
 
-Cursor cannot change a subagent's model mid-flight (hooks see the model but cannot set it; tested). Claude Code, run headlessly from Cursor's Shell tool, **does** honor the `model:` in agent files. This skill tells your Cursor agent to route custom subagents through `claude -p` for the rest of the chat. Every run reports the model it ran on, taken from the `modelUsage` field of Claude Code's JSON output.
+**You need:** Cursor desktop running locally (Cloud Agents have no `claude` CLI), Claude Code installed and signed in ([setup guide](https://code.claude.com/docs/en/setup)), and a POSIX shell (macOS, Linux). Runs bill your Claude Code account. The skill checks the Claude Code version for you.
 
 ## Installation
 
-You need **Cursor** (desktop, running locally; Cloud Agents have no `claude` CLI) and **Claude Code 2.1.281 or later**, installed and signed in. Follow Anthropic's [setup guide](https://code.claude.com/docs/en/setup), then check with `claude --version`. Runs bill your Claude Code account.
+Pick one route. All of them install the same skill.
 
-Pick one route.
+<a id="cursor-plugin"></a>
 
-**Cursor plugin (recommended).** Cursor, then Customize, Plugins, Add, From GitHub Repository, and enter:
+<details open>
+<summary><b>Cursor plugin (recommended)</b></summary>
 
-```
+In Cursor, open **Customize, Plugins, Add, From GitHub Repository** and enter:
+
+```text
 github.com/ysskrishna/claude-code-subagents-for-cursor
 ```
 
-Choose **user scope** to get the skill in every project, or project scope to commit it for a team.
+Choose **user scope** to get the skill in every project, or project scope to commit it for a team. More in [docs/cursor-setup.md](docs/cursor-setup.md).
 
-**skills.sh:**
+</details>
 
-```bash
-npx skills add ysskrishna/claude-code-subagents-for-cursor --skill use-claude-code-subagents -a cursor -g
-```
+<a id="skillssh-npx-skills"></a>
 
-This installs to `~/.agents/skills/`, which Cursor loads. Drop `-g` to install into the current project instead.
-
-**GitHub CLI** (version with `gh skill`):
+<details>
+<summary><b>skills.sh (npx skills)</b></summary>
 
 ```bash
-gh skill install ysskrishna/claude-code-subagents-for-cursor use-claude-code-subagents --agent cursor --scope user
+npx skills add ysskrishna/claude-code-subagents-for-cursor -a cursor -g
 ```
 
-This installs to `~/.cursor/skills/`. Without `--agent cursor`, `gh` installs for GitHub Copilot.
+Installs to `~/.agents/skills/`, which Cursor loads. Drop `-g` to install into the current project. Update with `npx skills update`. Remove with `npx skills remove use-claude-code-subagents`. More in [docs/skills-sh-setup.md](docs/skills-sh-setup.md).
 
-**Manual.** Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) folder, including `references/`, to `~/.cursor/skills/` (user) or `<project>/.cursor/skills/` (project).
+</details>
+
+<a id="github-cli-gh-skill"></a>
+
+<details>
+<summary><b>GitHub CLI (gh skill)</b></summary>
+
+```bash
+gh skill install ysskrishna/claude-code-subagents-for-cursor --all --agent cursor --scope user
+```
+
+Installs to `~/.cursor/skills/`. Without `--agent cursor`, `gh` installs for GitHub Copilot. Update with `gh skill update`. More in [docs/gh-cli-setup.md](docs/gh-cli-setup.md).
+
+</details>
+
+<a id="manual"></a>
+
+<details>
+<summary><b>Manual</b></summary>
+
+Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) folder, including `references/`, to `~/.cursor/skills/` (user) or `<project>/.cursor/skills/` (project). More in [docs/manual-setup.md](docs/manual-setup.md).
+
+</details>
 
 ## Usage
 
-```
+```text
 /use-claude-code-subagents
 ```
 
-The agent replies `Subagent mode: claude code`. From then on, every custom subagent you ask for runs via Claude Code on its own model. Say **"use cursor subagents"** to switch back to Cursor's native Task tool.
+The agent replies `Subagent mode: claude code`. From then on, each custom subagent you ask for runs through Claude Code on its own model, and the reply ends with a line like `scout ran on claude-haiku-5-5`. Say **"use cursor subagents"** to switch back to Cursor's Task tool.
 
-You can also skip the slash command and describe the problem ("why are all my subagents on Opus?"). The skill can load on its own, and when it does it asks for a yes before the first run, because runs bill your Claude Code account and edits bypass Cursor's review. Typing the slash command counts as consent.
+More in [docs/usage.md](docs/usage.md): how the skill loads on its own, what to expect, and how to check it works.
 
-## How it works
+## Documentation
 
-1. **Resolution.** It finds the agent file the way Cursor does: project beats user level; within a level, `.cursor/agents` beats `.claude/agents` beats `.codex/agents`. Agents not found in those six folders (Cursor's built-ins like `explore`) keep using the Task tool.
-2. **Model mapping.** The `model:` in the agent file is translated for Claude Code:
-
-   | `model:` in the agent file | What runs |
-   |---|---|
-   | Full Anthropic ID (`claude-haiku-5-5`) | That model, as is |
-   | Cursor effort suffix (`-low` `-medium` `-high` `-xhigh` `-max`, `-fast`, `-thinking*`, `[effort=...]`) | Base ID with the suffix stripped (Claude Code rejects suffixed IDs) |
-   | Alias (`haiku`, `sonnet`, `opus`) | Claude Code's latest of that family (Cursor resolves `haiku` to Haiku 4.5, so this intentionally differs) |
-   | `inherit`, missing, or non-Anthropic (`composer-*`, `gpt-*`, `grok-*`, `gemini-*`) | **Not routed through Claude Code.** It falls back to Cursor's Task tool, with a one-line reason |
-
-   Test results and untested edge cases: [`model-mapping.md`](skills/use-claude-code-subagents/references/model-mapping.md).
-3. **Invocation.** Claude Code format agents (`.claude/agents`, `~/.claude/agents`) run via `--agent <name>`. Cursor format agents (`.cursor/agents`, `.codex/agents`) are written to a temp file as JSON and passed via `--agents <file>`; the file is removed after the run. The brief goes through a quoted heredoc, so the shell never expands it. Editing agents get `--permission-mode acceptEdits`; read-only agents get none.
-4. **Safety.** Every run uses `--permission-prompts none`: anything Claude Code would prompt for is denied and reported back to you. Nothing runs with permissions skipped.
-
-A full worked run is in [`example.md`](skills/use-claude-code-subagents/references/example.md).
-
-## Verify it works
-
-1. Pick a custom subagent whose `model:` differs from your chat's model.
-2. Run `/use-claude-code-subagents`, then ask the chat to run that agent on a small task.
-3. The reply ends with a line like `scout ran on claude-haiku-5-5`. That model comes from Claude Code's `modelUsage`, not from the agent file, so it shows what actually ran.
-
-## Update and uninstall
-
-| Route | Update | Uninstall |
-|---|---|---|
-| Cursor plugin | Remove and add the plugin again | Remove it under Customize, Plugins |
-| skills.sh | `npx skills update` | `npx skills remove use-claude-code-subagents` |
-| GitHub CLI | `gh skill update` | Delete `~/.cursor/skills/use-claude-code-subagents` |
-| Manual | Copy the folder again | Delete the folder |
-
-## What to expect
-
-- Subagents show up as terminal commands, not Cursor's subagent cards.
-- No mid-run steering. Follow-ups go to the same agent with `--resume <session_id>`.
-- A subagent cannot ask you mid-run. It returns the question and the parent asks you.
-- **Edits made by a routed subagent bypass Cursor's review and undo.** The agent lists changed files in its summary. Review them.
-- **`claude -p` skips Claude Code's workspace trust dialog.** Use this only in projects you trust.
-- The first run of `claude` in a session may show a Cursor approval prompt (Claude Code needs network and writes to `~/.claude`, outside Cursor's sandbox). Allow it once, or allowlist `claude` in Cursor's run settings.
-- The subagent sees Claude Code's MCP config, not Cursor's. An agent that relies on a Cursor-only MCP server may lack that tool.
-- Cursor attaches a slash-invoked skill to that one message ([docs](https://cursor.com/docs/skills)). If the agent stops routing subagents through Claude Code later in the chat, run `/use-claude-code-subagents` again.
-
-## Troubleshooting
-
-| Symptom | Fix |
+| Guide | What is in it |
 |---|---|
-| No `Subagent mode: claude code` reply | The skill did not load. Type `/use-claude-code-subagents` and check that it appears in the list. |
-| `claude: command not found`, or "needs 2.1.281" | Install Claude Code, or run `claude update`. |
-| The agent ran through the Task tool | Its `model:` is missing, `inherit`, or not Anthropic, or its file was not found. The agent says which in one line. |
-| `is_error: true` and a model error | Your Claude Code account cannot use that model. Change the `model:` in the agent file. |
-| A permission was denied | The agent reports what was blocked and asks before rerunning with that tool allowed. |
-| Approval prompt on every run | Allowlist `claude` in Cursor's run settings. |
+| [docs/README.md](docs/README.md) | Requirements, platforms, what is tested, when you do not need this |
+| [docs/usage.md](docs/usage.md) | Using the skill, verifying it, what to expect |
+| [docs/how-it-works.md](docs/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
+| [docs/troubleshooting.md](docs/troubleshooting.md) | Symptoms and fixes |
+| [docs/security.md](docs/security.md) | What the skill can do, how it is limited, what to watch for |
+| [docs/development.md](docs/development.md) | Check scripts, CI, releases |
 
-## Platforms and tested versions
-
-- **macOS** (Cursor 3.27.22, Claude Code 2.1.310): the `claude` commands the skill runs, the `skills.sh` and `gh` install routes, and the validation scripts are tested. The Cursor plugin install and the slash command in the Cursor UI are checked by hand before each release.
-- **Linux:** the `skills.sh` and `gh` install routes and the validation run in CI. Running subagents through Claude Code on Linux is not tested.
-- **Windows:** untested.
-- **Cloud Agents:** not supported (no `claude` CLI there).
-
-## When you don't need this
-
-- If you turn BYOK off, Cursor's native subagents may honor their `model:` again (reported by Cursor staff; verify on your setup).
-- If Cursor fixes the pinning natively, this skill becomes unnecessary. Check the release notes before installing.
-
-## Development
-
-```bash
-bash scripts/validate.sh          # manifests, skill rules, CHANGELOG, evals
-bash scripts/check_claude_flags.sh # every claude flag the skill uses exists
-bash scripts/test_installs.sh all  # skills.sh and gh routes, in a throwaway HOME
-```
-
-`validate.sh` checks both manifests against Cursor's official plugin schemas (vendored in [`schemas/`](schemas/), from [cursor/plugins](https://github.com/cursor/plugins)), the skill's description, size, references and trigger evals ([`evals/`](evals/)), and that the CHANGELOG matches `plugin.json`. CI runs all three, and checks weekly for schema and flag drift.
+Reporting a vulnerability: see [SECURITY.md](SECURITY.md).
 
 ## Built and maintained by
 

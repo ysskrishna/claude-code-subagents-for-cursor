@@ -2,7 +2,7 @@
   "name": "claude-code-subagents-for-cursor",
   "displayName": "Claude Code Subagents",
   "description": "Run Cursor's custom subagents on the model in each agent file via Claude Code. Works around Cursor pinning custom subagents to the parent model.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "ysskrishna"
   },
@@ -13,9 +13,17 @@
   "category": "developer-tools",
   "tags": [
     "subagents",
+    "cursor-subagents",
     "claude-code",
     "model-routing",
-    "byok"
+    "byok",
+    "anthropic",
+    "agent-skills",
+    "cost-control",
+    "haiku",
+    "sonnet",
+    "opus",
+    "headless"
   ],
   "keywords": [
     "cursor",
@@ -28,7 +36,16 @@
     "agent-skills",
     "skill-md",
     "byok",
-    "cost"
+    "cost",
+    "cursor-plugin",
+    "cursor-skills",
+    "model-override",
+    "model-pinning",
+    "parent-model",
+    "claude-p",
+    "headless-claude",
+    "ai-agents",
+    "llm"
   ],
   "skills": "./skills/"
 }

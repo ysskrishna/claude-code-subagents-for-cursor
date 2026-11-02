@@ -12,7 +12,7 @@ When the user says "use cursor subagents", switch back to the Task tool for ever
 ## 0. First use in a chat
 
 1. Reply exactly: `Subagent mode: claude code`.
-2. Preflight once: run `claude --version` from the Shell tool with `required_permissions: ["all"]`. If it fails, tell the user to install Claude Code (`curl -fsSL https://claude.ai/install.sh | bash`, then run `claude` once to sign in) and stay in Cursor native mode until they do.
+2. Preflight once: run `claude --version` from the Shell tool with `required_permissions: ["all"]`. This skill needs Claude Code 2.1.281 or later (`--permission-prompts` needs 2.1.259, the `--agents <file>` form needs 2.1.281). If the command fails, point the user to the [Claude Code setup guide](https://code.claude.com/docs/en/setup), then to run `claude` once to sign in. If the version is older, ask them to run `claude update`. Stay in Cursor native mode until it passes.
 3. If the user's message included a task, do it (steps below); otherwise wait.
 
 ## 1. Resolve the agent

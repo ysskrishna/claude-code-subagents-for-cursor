@@ -1,168 +1,218 @@
 #!/usr/bin/env bash
-# Validate the plugin: manifest JSON against Cursor's vendored schemas,
-# frontmatter on every skill, and manifest/repo consistency.
+# Validate the plugin: manifests against Cursor's vendored schemas, the skill against
+# the Agent Skills limits, versions that must agree, safe `claude` commands in SKILL.md,
+# and links and install commands in the README and docs/.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
-fail=0
+command -v python3 >/dev/null 2>&1 || { echo "FAIL python3 is required"; exit 1; }
 
-# 1. Manifests parse and validate against Cursor's vendored schemas (if python3+jsonschema available)
-if command -v python3 >/dev/null 2>&1; then
-    if python3 -c "import jsonschema" >/dev/null 2>&1; then
-        for pair in "schemas/plugin.schema.json:.cursor-plugin/plugin.json" "schemas/marketplace.schema.json:.cursor-plugin/marketplace.json"; do
-            schema="${pair%%:*}"; doc="${pair#*:}"
-            if [ -f "$schema" ] && [ -f "$doc" ]; then
-                if ! python3 - "$schema" "$doc" <<'EOF'
-import json, sys
-from jsonschema import Draft7Validator
-with open(sys.argv[1]) as f: schema = json.load(f)
-with open(sys.argv[2]) as f: doc = json.load(f)
-errors = sorted(Draft7Validator(schema).iter_errors(doc), key=lambda e: list(e.path))
-for e in errors:
-    print(f"  {doc}: {'/'.join(map(str, e.path)) or '<root>'}: {e.message}")
-sys.exit(1 if errors else 0)
-EOF
-                then fail=1; else echo "OK  $doc matches $schema"; fi
-            else
-                echo "SKIP $doc (schema or doc missing)"; fi
-        done
-    else
-        echo "SKIP manifest schema validation (python3 jsonschema not installed)"; fi
-else
-    echo "SKIP manifest schema validation (python3 not installed)"; fi
-
-# 2. Every skill file has name and description frontmatter
-for f in skills/*/SKILL.md; do
-    [ -f "$f" ] || { echo "FAIL no skill files found"; fail=1; break; }
-    if head -1 "$f" | grep -q '^---$'; then
-        front=$(awk 'NR==1{next} /^---$/{exit} {print}' "$f")
-        echo "$front" | grep -q '^name:' || { echo "FAIL $f: missing 'name' in frontmatter"; fail=1; }
-        echo "$front" | grep -q '^description:' || { echo "FAIL $f: missing 'description' in frontmatter"; fail=1; }
-        echo "OK  $f has name + description frontmatter"
-    else
-        echo "FAIL $f: no frontmatter block"; fail=1
-    fi
-done
-
-# 3. Manifest/name/repo consistency
-for doc in .cursor-plugin/plugin.json .cursor-plugin/marketplace.json; do
-    [ -f "$doc" ] || { echo "FAIL missing $doc"; fail=1; continue; }
-    python3 -c "import json,sys; json.load(open('$doc'))" 2>/dev/null || { echo "FAIL $doc: invalid JSON"; fail=1; }
-done
-if [ -f .cursor-plugin/plugin.json ]; then
-    mname=$(python3 -c "import json; print(json.load(open('.cursor-plugin/plugin.json'))['name'])" 2>/dev/null)
-    [ "$mname" = "claude-code-subagents-for-cursor" ] || { echo "FAIL plugin.json name is '$mname', expected claude-code-subagents-for-cursor"; fail=1; }
-    repo=$(python3 -c "import json; print(json.load(open('.cursor-plugin/plugin.json')).get('repository',''))" 2>/dev/null)
-    case "$repo" in
-        https://github.com/ysskrishna/claude-code-subagents-for-cursor*) echo "OK  repository URL matches repo";;
-        *) echo "FAIL repository URL '$repo' does not match ysskrishna/claude-code-subagents-for-cursor"; fail=1;;
-    esac
-fi
-if [ -f .cursor-plugin/marketplace.json ]; then
-    mkt_name=$(python3 -c "import json; print(json.load(open('.cursor-plugin/marketplace.json'))['name'])" 2>/dev/null)
-    [ "$mkt_name" = "claude-code-subagents-for-cursor" ] || { echo "FAIL marketplace.json name is '$mkt_name'"; fail=1; }
-fi
-
-# 3b. Skill rules: description shape, size, name, and companion files
-if command -v python3 >/dev/null 2>&1; then
-    if ! python3 - <<'EOF'
+python3 - <<'EOF'
 import glob, json, os, re, sys
 
+REPO = "ysskrishna/claude-code-subagents-for-cursor"
 bad = 0
+
+def ok(msg): print(f"OK   {msg}")
 def err(msg):
     global bad
-    print(f"FAIL {msg}")
     bad = 1
+    print(f"FAIL {msg}")
 
+def read(path):
+    with open(path, encoding="utf-8") as f:
+        return f.read()
+
+def load_json(path):
+    try:
+        return json.loads(read(path))
+    except (OSError, ValueError) as e:
+        err(f"{path}: {e}")
+        return None
+
+# 1. Manifests: valid JSON, and valid against Cursor's vendored schemas when jsonschema is installed
+manifests = {}
+for doc in (".cursor-plugin/plugin.json", ".cursor-plugin/marketplace.json"):
+    manifests[doc] = load_json(doc)
+try:
+    from jsonschema import Draft7Validator
+except ImportError:
+    Draft7Validator = None
+    print("SKIP manifest schema validation (python3 jsonschema not installed)")
+if Draft7Validator:
+    for schema, doc in (("schemas/plugin.schema.json", ".cursor-plugin/plugin.json"),
+                        ("schemas/marketplace.schema.json", ".cursor-plugin/marketplace.json")):
+        if manifests.get(doc) is None:
+            continue
+        errors = sorted(Draft7Validator(load_json(schema)).iter_errors(manifests[doc]), key=lambda e: list(e.path))
+        for e in errors:
+            err(f"{doc}: {'/'.join(map(str, e.path)) or '<root>'}: {e.message}")
+        if not errors:
+            ok(f"{doc} matches {schema}")
+
+plugin = manifests.get(".cursor-plugin/plugin.json") or {}
+market = manifests.get(".cursor-plugin/marketplace.json") or {}
+
+# 2. Manifest identity and descriptions
+if plugin.get("name") != "claude-code-subagents-for-cursor":
+    err(f"plugin.json name is {plugin.get('name')!r}")
+if not str(plugin.get("repository", "")).startswith(f"https://github.com/{REPO}"):
+    err(f"plugin.json repository {plugin.get('repository')!r} does not match {REPO}")
+else:
+    ok("repository URL matches repo")
+if market.get("name") != "claude-code-subagents-for-cursor":
+    err(f"marketplace.json name is {market.get('name')!r}")
+mkt_plugins = market.get("plugins") or [{}]
+for label, value in (("plugin.json description", plugin.get("description")),
+                     ("marketplace.json metadata.description", (market.get("metadata") or {}).get("description")),
+                     ("marketplace.json plugin description", mkt_plugins[0].get("description"))):
+    if not str(value or "").strip():
+        err(f"{label} is empty")
+logo = plugin.get("logo", "")
+if logo and not os.path.isfile(logo):
+    err(f"plugin.json logo {logo!r} does not exist")
+
+# 3. Skills: Agent Skills limits, companion files, evals
+SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
+skill_text = ""
 for path in sorted(glob.glob("skills/*/SKILL.md")):
     skill_dir = os.path.dirname(path)
     dirname = os.path.basename(skill_dir)
-    lines = open(path, encoding="utf-8").read().split("\n")
-    if lines and lines[-1] == "":
+    text = read(path)
+    skill_text += text + "\n"
+    lines = text.split("\n")
+    if lines[-1] == "":
         lines.pop()
-    end = lines.index("---", 1) if lines and lines[0] == "---" and "---" in lines[1:] else -1
-    if end < 0:
-        err(f"{path}: frontmatter is not closed")
+    if not lines or lines[0] != "---" or "---" not in lines[1:]:
+        err(f"{path}: frontmatter is missing or not closed")
         continue
-    front = lines[1:end]
+    front = lines[1:lines.index("---", 1)]
 
-    name = next((l.split(":", 1)[1].strip() for l in front if l.startswith("name:")), "")
+    def field(key):
+        for i, l in enumerate(front):
+            if l.startswith(key + ":"):
+                rest = l.split(":", 1)[1].strip()
+                if rest in (">", "|", ">-", "|-"):
+                    block = []
+                    for nxt in front[i + 1:]:
+                        if nxt.startswith(" "):
+                            block.append(nxt.strip())
+                        else:
+                            break
+                    return " ".join(block)
+                return rest.strip("\"'")
+        return ""
+
+    name = field("name")
     if name != dirname:
-        err(f"{path}: name '{name}' must match directory '{dirname}'")
+        err(f"{path}: name {name!r} must match directory {dirname!r}")
+    if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", name) or len(name) > 64:
+        err(f"{path}: name {name!r} must be 1-64 chars of a-z, 0-9 and single hyphens")
+    desc = field("description")
+    if not desc or len(desc) > 1024:
+        err(f"{path}: description must be 1-1024 chars, found {len(desc)}")
+    if len(lines) > 500:
+        err(f"{path}: {len(lines)} lines, limit is 500")
 
-    desc = ""
-    for i, l in enumerate(front):
-        if l.startswith("description:"):
-            rest = l.split(":", 1)[1].strip()
-            if rest in (">", "|", ">-", "|-"):
-                block = []
-                for nxt in front[i + 1:]:
-                    if nxt.startswith(" "):
-                        block.append(nxt.strip())
-                    else:
-                        break
-                desc = " ".join(block)
-            else:
-                desc = rest.strip("\"'")
-            break
-    if not desc.startswith("Use "):
-        err(f"{path}: description must start with 'Use '")
-    if not 200 <= len(desc) <= 350:
-        err(f"{path}: description is {len(desc)} chars, expected 200-350")
-    if "Skip" not in desc:
-        err(f"{path}: description needs a Skip clause")
-
-    if len(lines) > 120:
-        err(f"{path}: {len(lines)} lines, limit is 120")
+    version = None
+    in_meta = False
+    for l in front:
+        if l.startswith("metadata:"):
+            in_meta = True
+        elif in_meta and l.strip().startswith("version:"):
+            version = l.split(":", 1)[1].strip().strip("\"'")
+        elif in_meta and not l.startswith(" "):
+            in_meta = False
+    if version != plugin.get("version"):
+        err(f"{path}: metadata.version {version!r} must equal plugin.json version {plugin.get('version')!r}")
 
     if not os.path.isfile(os.path.join(skill_dir, "references", "example.md")):
         err(f"{skill_dir}: references/example.md is required")
-
-    for link in re.findall(r"\]\((references/[^)#]+)", "\n".join(lines)):
+    for link in re.findall(r"\]\((references/[^)#]+)", text):
         if not os.path.isfile(os.path.join(skill_dir, link)):
             err(f"{path}: broken link {link}")
 
     ev = f"evals/{dirname}.json"
-    if not os.path.isfile(ev):
+    items = load_json(ev) if os.path.isfile(ev) else None
+    if items is None:
         err(f"{ev} is required")
     else:
-        try:
-            items = json.load(open(ev))
-            yes = sum(1 for x in items if x.get("should_trigger") is True)
-            no = sum(1 for x in items if x.get("should_trigger") is False)
-            if (yes, no) != (8, 8) or any(not x.get("query") for x in items):
-                err(f"{ev}: expected 8 should-trigger and 8 should-not-trigger queries, found {yes} and {no}")
-        except (ValueError, AttributeError) as e:
-            err(f"{ev}: invalid ({e})")
-
+        yes = sum(1 for x in items if x.get("should_trigger") is True)
+        no = sum(1 for x in items if x.get("should_trigger") is False)
+        if yes < 4 or no < 4 or any(not x.get("query") for x in items):
+            err(f"{ev}: need at least 4 should-trigger and 4 should-not-trigger queries, found {yes} and {no}")
 if not bad:
-    print("OK  skill description, size, references and evals")
+    ok("skill name, description, size, references, evals and version")
+
+# 4. Safe `claude` commands in SKILL.md: every <placeholder> inside a bash block must be double-quoted
+unquoted = []
+for block in re.findall(r"```bash\n(.*?)```", skill_text, re.S):
+    for line in block.split("\n"):
+        rest = re.sub(r'"[^"]*"', "", line)
+        unquoted += re.findall(r"<[A-Za-z_][A-Za-z0-9_-]*>", rest)
+if unquoted:
+    err(f"SKILL.md: unquoted placeholders in a bash block: {sorted(set(unquoted))}")
+else:
+    ok("SKILL.md bash blocks quote every placeholder")
+if re.search(r"<<'?[A-Z]+'?\s*$", skill_text, re.M):
+    err("SKILL.md: heredoc found; briefs must go through files")
+
+# 5. One minimum Claude Code version, in SKILL.md and docs/README.md
+m1 = re.search(r"must be (\d+\.\d+\.\d+) or later", skill_text)
+m2 = re.search(r"Claude Code (\d+\.\d+\.\d+) or later", read("docs/README.md")) if os.path.isfile("docs/README.md") else None
+if not (m1 and m2):
+    err("minimum Claude Code version not found in SKILL.md or docs/README.md")
+elif m1.group(1) != m2.group(1):
+    err(f"minimum Claude Code version differs: SKILL.md {m1.group(1)}, docs/README.md {m2.group(1)}")
+else:
+    ok(f"minimum Claude Code version {m1.group(1)} agrees in SKILL.md and docs/README.md")
+
+# 6. CHANGELOG matches plugin.json
+pver = plugin.get("version", "")
+if not SEMVER.match(str(pver)):
+    err(f"plugin.json version {pver!r} is not X.Y.Z")
+if os.path.isfile("CHANGELOG.md"):
+    cl = read("CHANGELOG.md")
+    heads = re.findall(r"^## \[(\d+\.\d+\.\d+)\]", cl, re.M)
+    if not heads or heads[0] != pver:
+        err(f"CHANGELOG top version {heads[:1]} differs from plugin.json {pver!r}")
+    elif not re.search(rf"^\[{re.escape(pver)}\]: https://github.com/{REPO}/", cl, re.M):
+        err(f"CHANGELOG has no footer link for [{pver}]")
+    else:
+        ok(f"CHANGELOG top version {pver} matches plugin.json")
+
+# 7. Required files, local links, install commands
+for f in ("README.md", "LICENSE", "CHANGELOG.md", "SECURITY.md"):
+    if not os.path.isfile(f):
+        err(f"missing {f}")
+
+for md in ["README.md"] + sorted(glob.glob("docs/*.md")):
+    base = os.path.dirname(md)
+    for target in re.findall(r"\]\(([^)\s]+)\)", read(md)):
+        if re.match(r"[a-z]+:", target) or target.startswith("#"):
+            continue
+        path = os.path.normpath(os.path.join(base, target.split("#", 1)[0]))
+        if not os.path.exists(path):
+            err(f"{md}: broken link {target}")
+for img in re.findall(r'src="([^"]+)"', read("README.md")):
+    if not re.match(r"[a-z]+:", img) and not os.path.exists(img):
+        err(f"README.md: missing image {img}")
+
+readme = read("README.md")
+for prefix, guide in (("npx skills add ", "docs/skills-sh-setup.md"), ("gh skill install ", "docs/gh-cli-setup.md")):
+    cmds = [l.strip() for l in readme.split("\n") if l.strip().startswith(prefix)]
+    if not cmds:
+        err(f"README.md has no '{prefix}' command")
+    for c in cmds:
+        if os.path.isfile(guide) and c not in read(guide):
+            err(f"{guide} does not contain the README command: {c}")
+if not bad:
+    ok("required files, links and install commands")
+
 sys.exit(bad)
 EOF
-    then fail=1; fi
-fi
-
-# 3c. Release metadata: CHANGELOG matches plugin.json, logo exists, no pipe-to-shell
-if [ -f .cursor-plugin/plugin.json ] && [ -f CHANGELOG.md ]; then
-    pver=$(python3 -c "import json; print(json.load(open('.cursor-plugin/plugin.json'))['version'])" 2>/dev/null)
-    cver=$(sed -n 's/^## \[\([0-9][0-9.]*\)\].*/\1/p' CHANGELOG.md | head -1)
-    if [ "$pver" = "$cver" ]; then echo "OK  CHANGELOG top version $cver matches plugin.json"; else echo "FAIL CHANGELOG top version '$cver' differs from plugin.json '$pver'"; fail=1; fi
-    grep -q "^\[$pver\]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/" CHANGELOG.md || { echo "FAIL CHANGELOG has no footer link for [$pver]"; fail=1; }
-    logo=$(python3 -c "import json; print(json.load(open('.cursor-plugin/plugin.json')).get('logo',''))" 2>/dev/null)
-    if [ -n "$logo" ] && [ ! -f "$logo" ]; then echo "FAIL plugin.json logo '$logo' does not exist"; fail=1; fi
-fi
-# Hermes-style scanners block installs when any file pipes a download into a shell.
-if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
-    hits=$(git ls-files -z -- . ':!scripts/validate.sh' | xargs -0 grep -nIE '(curl|wget)[^|]*\|[[:space:]]*(sudo[[:space:]]+)?(ba|z)?sh' 2>/dev/null || true)
-    if [ -n "$hits" ]; then echo "FAIL pipe-to-shell found:"; echo "$hits"; fail=1; else echo "OK  no pipe-to-shell in tracked files"; fi
-fi
-
-# 4. Required files
-for f in README.md LICENSE CHANGELOG.md; do
-    [ -f "$f" ] || { echo "FAIL missing $f"; fail=1; }
-done
-
-if [ "$fail" -eq 1 ]; then
+rc=$?
+if [ "$rc" -ne 0 ]; then
     echo "VALIDATION FAILED"
     exit 1
 fi

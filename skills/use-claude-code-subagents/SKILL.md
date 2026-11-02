@@ -42,6 +42,8 @@ Not found → not a custom agent: use the Task tool as usual and say one line wh
 
 The brief has: goal, absolute paths, constraints, and the exact return format. Never paste file contents into the brief — name the files to read instead.
 
+Pass the brief through a single-quoted heredoc, never inside double quotes. Double quotes make the shell expand `$VAR`, backticks and `$(...)` and break on an inner `"` (tested: `$HOME` and `` `date` `` in a double-quoted brief arrived expanded). The brief must not contain a line that is exactly `BRIEF`.
+
 ## 4. Run
 
 Always from the Shell tool with `required_permissions: ["all"]` (Claude Code needs network and writes to `~/.claude`, which the sandbox blocks).
@@ -49,7 +51,10 @@ Always from the Shell tool with `required_permissions: ["all"]` (Claude Code nee
 Agent from `.claude/agents` or `~/.claude/agents` (Claude Code format):
 
 ```bash
-claude -p "<brief>" --agent <name> --model <mapped> --permission-prompts none --output-format json
+claude -p "$(cat <<'BRIEF'
+<brief>
+BRIEF
+)" --agent <name> --model <mapped> --permission-prompts none --output-format json
 ```
 
 Agent from `.cursor/agents` or `.codex/agents` (Cursor format): create a temp file with `mktemp "${TMPDIR:-/tmp}/claude-agents.XXXXXX"` (no `.json` suffix: macOS only randomizes trailing X's), write the agent into it as JSON in Claude Code format, pass it, then `rm -f` it after the run:
@@ -59,7 +64,10 @@ Agent from `.cursor/agents` or `.codex/agents` (Cursor format): create a temp fi
 ```
 
 ```bash
-claude -p "<brief>" --agents <temp-file> --agent <name> --model <mapped> --permission-prompts none --output-format json
+claude -p "$(cat <<'BRIEF'
+<brief>
+BRIEF
+)" --agents <temp-file> --agent <name> --model <mapped> --permission-prompts none --output-format json
 ```
 
 - Add `"tools": [...]` to the JSON when the frontmatter has a `tools:` list.
@@ -72,6 +80,6 @@ claude -p "<brief>" --agents <temp-file> --agent <name> --model <mapped> --permi
 - If `is_error` is `true`, `result` holds an error message, not the agent's answer (e.g. an inaccessible model), and `modelUsage` is empty. Report the error and do not treat it as the agent's output.
 - Otherwise, answer from `result`, then one short line naming the model from `modelUsage` (e.g. "test-ro ran on claude-haiku-5-5"). Never report cost.
 - `permission_denials` non-empty → say what was blocked and ask before rerunning with `--allowedTools "<tool>"` added. Otherwise say nothing about it.
-- The agent asked a question → ask the user, then continue the same agent: `claude -p "<answer>" --resume <session_id> --permission-prompts none --output-format json`. Use `--resume` for any follow-up to the same agent.
+- The agent asked a question → ask the user, then continue the same agent with the answer in the same heredoc form: `claude -p "$(cat <<'BRIEF' ... BRIEF)" --resume <session_id> --permission-prompts none --output-format json`. Use `--resume` for any follow-up to the same agent.
 - Parallel work: start up to 3 runs in the background (`block_until_ms: 0`) and await them.
 - Edits made this way bypass Cursor's review/undo — list changed files in the summary.

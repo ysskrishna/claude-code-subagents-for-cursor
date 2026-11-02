@@ -1,6 +1,11 @@
 ---
 name: use-claude-code-subagents
-description: Run this chat's custom subagents through Claude Code so each runs on the model in its own agent file instead of the parent model
+description: >
+  Use when Cursor subagents run on the parent model instead of the model in their agent file, or the user asks: "use claude code subagents", "run scout on haiku", "why are my subagents all Opus?". Runs custom subagents through headless Claude Code. Skip for Cursor's built-in subagents or Cloud Agents.
+license: MIT
+metadata:
+  author: ysskrishna
+  version: "2026.11.2"
 ---
 
 # use-claude-code-subagents

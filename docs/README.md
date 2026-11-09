@@ -36,6 +36,7 @@ The short version is in the [README](../README.md).
 | Date | Cursor | Claude Code | What was run |
 |---|---|---|---|
 | 2026-11-02 | 3.27.22 | 2.1.310 | Briefs through stdin (shell characters and lines such as `BRIEF` arrive unchanged); `--agents <file>` with stdin; `--resume` with and without `--agent`; both install routes |
+| 2026-11-09 | 3.29.9 | 2.1.318 | `--agent` resolved from the Shell tool's `working_directory` and from a subfolder of it; brief read through stdin from a file in Cursor's project folder; the three check scripts. Whether Cursor prompts was not tested by script |
 
 These versions will age. If something behaves differently on yours, [open an issue](https://github.com/ysskrishna/claude-code-subagents-for-cursor/issues/new/choose) with your versions.
 

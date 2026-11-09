@@ -22,12 +22,14 @@ The suffix list, test results and untested edge cases are in [`model-mapping.md`
 
 ## 3. The `claude` command
 
+- The command starts with `claude`: no `cd`, `export`, pipe or `;` around it. Cursor's allowlist matches the start of a command ([permissions.md](permissions.md)). The Shell tool's `working_directory` is the project folder, so Claude Code finds the agent file there (it also searches parent folders, tested).
 - The brief is written to a file and read through stdin (`claude -p < file`), so the shell never parses it. `$VAR`, backticks, quotes and lines such as `BRIEF` reach the agent unchanged.
+- The files live in `~/.cursor/projects/<workspace>/subagent-briefs/<id>/`, Cursor's own folder for the project, which counts as inside the workspace. If the skill cannot use it, it falls back to a `mktemp` folder and removes that folder afterwards.
 - Claude Code format agents (`.claude/agents`, `~/.claude/agents`) run with `--agent <name>`.
-- Cursor format agents (`.cursor/agents`, `.codex/agents`) are written as JSON to a file in the same private temp folder and passed with `--agents <file>`.
+- Cursor format agents (`.cursor/agents`, `.codex/agents`) are written as JSON to a file in the same run folder and passed with `--agents <file>`.
 - Editing agents get `--permission-mode acceptEdits`. Read-only agents get none.
 - Every run uses `--permission-prompts none`: anything Claude Code would prompt for is denied and reported back to you. Nothing runs with permissions skipped.
 - A follow-up to the same agent repeats `--agent`/`--agents`/`--model` and adds `--resume <session id>`. Resuming without them drops the agent's tool limits (tested).
-- The temp folder is removed when no follow-up is pending.
+- The files are deleted with the Delete tool when no follow-up is pending.
 
 See [security.md](security.md) for the checks applied before a command is built.

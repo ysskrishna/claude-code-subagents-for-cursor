@@ -10,6 +10,7 @@ The short version is in the [README](../README.md).
 | [manual-setup.md](manual-setup.md) | Copy the folder yourself |
 | [usage.md](usage.md) | Using the skill, verifying it, what to expect |
 | [how-it-works.md](how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
+| [permissions.md](permissions.md) | Run without approval prompts |
 | [troubleshooting.md](troubleshooting.md) | Symptoms and fixes |
 | [security.md](security.md) | What the skill can do and how it is limited |
 | [development.md](development.md) | Check scripts, CI, releases |
@@ -18,7 +19,7 @@ The short version is in the [README](../README.md).
 
 - Cursor desktop, running locally. Cloud Agents have no `claude` CLI.
 - Claude Code 2.1.281 or later, installed and signed in. Follow Anthropic's [setup guide](https://code.claude.com/docs/en/setup), then check with `claude --version`. Runs bill your Claude Code account.
-- A POSIX shell (`mktemp`, `rm`, `<`): macOS or Linux.
+- A POSIX shell (the `<` redirect): macOS or Linux.
 
 ## Platforms and what was checked
 

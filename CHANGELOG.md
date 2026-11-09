@@ -25,7 +25,7 @@ Runs without approval prompts. Cursor asked for approval on most subagent runs b
 
 - [`docs/permissions.md`](docs/permissions.md): what causes approval prompts, the recommended Auto-review setup, an Allowlist-mode setup, and a Claude Code settings file for denied tools.
 - A "Run without approval prompts" section in the README.
-- `scripts/dev_install.sh`: symlink this checkout into `~/.cursor/skills/` to try changes locally, and undo it.
+- `scripts/dev_install.sh`: copy this checkout into `~/.cursor/plugins/local/` to try changes in Cursor before they are published, with `--remove` to undo. It warns when another copy of the skill is installed.
 
 ## [1.1.0] - 2026-11-02
 

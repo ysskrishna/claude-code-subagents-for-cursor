@@ -16,6 +16,19 @@ bash scripts/test_installs.sh all  # skills.sh and gh routes, in a throwaway HOM
 
 CI runs all three on pull requests and checks weekly for drift in Cursor's schemas and Claude Code's flags.
 
+## Try your changes in Cursor
+
+```bash
+bash scripts/dev_install.sh           # copy the plugin to ~/.cursor/plugins/local/
+bash scripts/dev_install.sh --remove  # delete that copy
+```
+
+Then run **Developer: Reload Window** in Cursor and start a new chat. Run the script again after each change.
+
+- It copies, because Cursor loads a symlink in `plugins/local` only when the target is inside that folder.
+- Cursor prefers a marketplace-installed plugin of the same name over the local one. The script warns when it finds one, or a copy under `~/.cursor/skills` or `~/.agents/skills`. Uninstall those first, then check the first reply: it should show the flow of the version you are testing.
+- Before a release, also test the published routes with `scripts/test_installs.sh`.
+
 ## Releases
 
 1. Bump `version` in `.cursor-plugin/plugin.json` and `metadata.version` in `skills/use-claude-code-subagents/SKILL.md` to the same value.

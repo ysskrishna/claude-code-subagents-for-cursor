@@ -35,6 +35,7 @@ Then run **Developer: Reload Window** in Cursor and start a new chat. Run the sc
 2. Add a `## [X.Y.Z]` section to `CHANGELOG.md` and a footer link.
 3. Run the three scripts.
 4. Merge, then push an annotated tag `vX.Y.Z`. `.github/workflows/release.yml` checks the tag against `plugin.json` and creates the GitHub Release.
+5. Update [release-state.md](release-state.md) with the shipped version, tag, `main` commit, and release URL.
 
 ## Facts with one home
 
@@ -43,4 +44,5 @@ Then run **Developer: Reload Window** in Cursor and start a new chat. Run the sc
 | Minimum Claude Code version | `SKILL.md` (preflight) and the Requirements list in `docs/README.md` |
 | Model suffixes to strip | `skills/use-claude-code-subagents/references/model-mapping.md` |
 | Plugin version | `.cursor-plugin/plugin.json` (mirrored in `SKILL.md` and checked) |
+| Last shipped release (tag, commit, URL) | `docs/release-state.md` |
 | Versions last verified | `docs/README.md` |

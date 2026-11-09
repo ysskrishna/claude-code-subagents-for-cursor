@@ -54,11 +54,19 @@ When a flag or behavior of `claude` matters, test it with a real run before writ
 
 - README stays short: badges, overview, install routes in `<details>`, links to `docs/`. Put detail in `docs/`.
 - Install commands must match across README, `docs/*-setup.md` and `scripts/test_installs.sh`. `validate.sh` checks this.
-- Do not write version numbers or dates into prose that will go stale. "Versions last verified" lives only in `docs/README.md`.
+- Do not write version numbers or dates into prose that will go stale. Exceptions: [docs/release-state.md](docs/release-state.md) (updated on each ship) and "Versions last verified" in `docs/README.md` only.
 
 ## Releases
 
-Follow [docs/development.md](docs/development.md#releases). In short: one version in `plugin.json` and `SKILL.md`, a CHANGELOG section with a footer link, the three scripts, merge, then an annotated tag `vX.Y.Z`. The release workflow checks the tag against `plugin.json`.
+What is **already published** lives in [docs/release-state.md](docs/release-state.md). When the owner asks to ship a release, follow [docs/development.md](docs/development.md#releases) and:
+
+1. Confirm bumped version agrees in `.cursor-plugin/plugin.json`, `skills/use-claude-code-subagents/SKILL.md`, and the top `CHANGELOG.md` section (with footer compare link).
+2. Ensure changes are on `main` (`git pull origin main`).
+3. Run `bash scripts/validate.sh`, `bash scripts/check_claude_flags.sh`, and `bash scripts/test_installs.sh all` on `main`.
+4. Create an annotated tag `vX.Y.Z` on `main` and `git push origin vX.Y.Z`. Tag must match `plugin.json`; [`.github/workflows/release.yml`](.github/workflows/release.yml) creates the GitHub Release.
+5. Confirm the release at https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases, then update `docs/release-state.md` (version, tag, `main` commit, release URL).
+
+Do not create tags or GitHub releases unless the owner asks.
 
 ## Commits and PRs
 

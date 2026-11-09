@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-09
+
+Runs without approval prompts. Cursor asked for approval on most subagent runs because of how the commands were built, not because of a missing setting.
+
+### Fixed
+
+- **`claude` commands start with `claude`.** Agents put `cd <dir> &&` or `export VAR=...;` in front of the command. Cursor's allowlist matches the start of a command, so those runs never matched an allowlisted `claude -p`. The skill now sets the Shell tool's `working_directory` instead of using `cd`, and keeps the command a single plain command.
+- **Briefs are written inside Cursor's project folder** (`~/.cursor/projects/<workspace>/subagent-briefs/<id>/`), not `$TMPDIR`. Writing outside the workspace triggers Cursor's external-file protection. The old `mktemp` folder is the fallback.
+- **No `mktemp -d` and `rm -rf` steps** in the normal path. Cleanup uses the Delete tool, so there are two fewer shell commands to approve.
+- **Denied tools no longer stop the run.** When `permission_denials` is not empty, the skill lists what was blocked, finishes the work that does not depend on it, and asks once at the end.
+
+### Security
+
+- **No credentials in briefs or agent definitions.** The skill names the environment variable or file to read instead of copying the secret into a file.
+- The skill's own commands are limited to `claude --version` and `claude -p`, with no heredoc, `cd`, `export`, pipe or `;`.
+
+### Added
+
+- [`docs/permissions.md`](docs/permissions.md): what causes approval prompts, the recommended Auto-review setup, an Allowlist-mode setup, and a Claude Code settings file for denied tools.
+- A "Run without approval prompts" section in the README.
+- `scripts/dev_install.sh`: symlink this checkout into `~/.cursor/skills/` to try changes locally, and undo it.
+
 ## [1.1.0] - 2026-11-02
 
 Safer commands, a shorter README, and the detail moved into `docs/`.
@@ -50,5 +72,6 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.2.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases/tag/v1.0.0

@@ -95,7 +95,7 @@ claude -p
 claude --version
 ```
 
-Cursor's allowlist matches the start of a command, so the skill keeps `claude` first (no `cd` or `export` in front) and writes briefs inside Cursor's project folder, not `$TMPDIR`. In **Allowlist** mode the same two entries work; the `autoRun` instructions only apply to Auto-review. If you use a `terminalAllowlist` key in `permissions.json`, it replaces the list in Settings, so copy your other entries into it. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/permissions.md](docs/permissions.md).
+Cursor's allowlist matches the start of a command, so the skill keeps `claude` first (no `cd` or `export` in front) and writes briefs to `subagent-briefs/` inside the workspace (add it to `.gitignore`), not `$TMPDIR`. In **Allowlist** mode the same two entries work; the `autoRun` instructions only apply to Auto-review. If you use a `terminalAllowlist` key in `permissions.json`, it replaces the list in Settings, so copy your other entries into it. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/permissions.md](docs/permissions.md).
 
 </details>
 

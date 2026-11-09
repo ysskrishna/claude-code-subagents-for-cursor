@@ -12,8 +12,8 @@ Runs without approval prompts. Cursor asked for approval on most subagent runs b
 ### Fixed
 
 - **`claude` commands start with `claude`.** Agents put `cd <dir> &&` or `export VAR=...;` in front of the command. Cursor's allowlist matches the start of a command, so those runs never matched an allowlisted `claude -p`. The skill now sets the Shell tool's `working_directory` instead of using `cd`, and keeps the command a single plain command.
-- **Briefs are written inside Cursor's project folder** (`~/.cursor/projects/<workspace>/subagent-briefs/<id>/`), not `$TMPDIR`. Writing outside the workspace triggers Cursor's external-file protection. The old `mktemp` folder is the fallback.
-- **No `mktemp -d` and `rm -rf` steps** in the normal path. Cleanup uses the Delete tool, so there are two fewer shell commands to approve.
+- **Briefs are written to `<workspace>/subagent-briefs/<id>/`**, not `$TMPDIR`. Writing outside the workspace triggers Cursor's External-File Protection, and that includes `~/.cursor/projects/`, which counts as inside the boundary for reads only. Add `subagent-briefs/` to your `.gitignore`. The `mktemp` folder is the fallback when there is no workspace.
+- **No `mktemp -d`, `rm -rf` or delete steps** in the normal path. The skill leaves its brief files in place, so there are fewer commands to approve.
 - **Denied tools no longer stop the run.** When `permission_denials` is not empty, the skill lists what was blocked, finishes the work that does not depend on it, and asks once at the end.
 
 ### Security

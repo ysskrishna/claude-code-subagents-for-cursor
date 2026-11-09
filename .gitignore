@@ -1,3 +1,4 @@
 workspace/
 .cursor/
 __pycache__/
+subagent-briefs/

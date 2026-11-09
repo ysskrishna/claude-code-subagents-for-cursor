@@ -26,7 +26,7 @@ You find code. Return file paths and a short summary. Never edit files.
 2. **Reply and preflight.** `Subagent mode: claude code`. `claude --version` prints 2.1.310, which is at least 2.1.281.
 3. **Resolve.** `/work/api/.cursor/agents/scout.md` is the first match. The name `scout` passes the name check. Cursor format, so it goes through `--agents`. One line to the user: "`.cursor/agents/scout.md`, read-only".
 4. **Map.** `claude-haiku-5-5-medium` starts with `claude-` and ends in `-medium`; strip it to `claude-haiku-5-5`, which passes the model check. `readonly: true`, so no `--permission-mode`.
-5. **Run.** Cursor's folder for this project is `~/.cursor/projects/work-api` (invented), so the run folder is `~/.cursor/projects/work-api/subagent-briefs/k3fz9a2x`, with run id `k3fz9a2x` (it passes the run id check). Write `<dir>/brief.txt` with the Write tool:
+5. **Run.** The workspace root is `/work/api`, so the run folder is `/work/api/subagent-briefs/k3fz9a2x`, with run id `k3fz9a2x` (it passes the run id check). Write `<dir>/brief.txt` with the Write tool:
 
 ```text
 Goal: find where retry settings are configured.
@@ -43,10 +43,10 @@ Write `<dir>/agents.json`:
 Run the command with the Shell tool's `working_directory` set to `/work/api` and nothing in front of `claude`:
 
 ```bash
-claude -p --agents "/home/me/.cursor/projects/work-api/subagent-briefs/k3fz9a2x/agents.json" --agent "scout" --model "claude-haiku-5-5" --permission-prompts none --output-format json < "/home/me/.cursor/projects/work-api/subagent-briefs/k3fz9a2x/brief.txt"
+claude -p --agents "/work/api/subagent-briefs/k3fz9a2x/agents.json" --agent "scout" --model "claude-haiku-5-5" --permission-prompts none --output-format json < "/work/api/subagent-briefs/k3fz9a2x/brief.txt"
 ```
 
-Then delete the two files with the Delete tool.
+The two files stay in `subagent-briefs/`.
 
 6. **Report.** The JSON has `is_error: false`, `permission_denials: []` and `modelUsage` with the single key `claude-haiku-5-5`. The reply is the contents of `result`, then one line: "scout ran on claude-haiku-5-5".
 

@@ -8,7 +8,7 @@
 | `is_error: true` and a model error | Your Claude Code account cannot use that model, or Cursor added a model suffix this skill does not know. Change the `model:` in the agent file, or report the suffix in an issue. |
 | A permission was denied | The agent reports what was blocked, finishes the rest and asks once at the end. To allow a tool for good, add it to `.claude/settings.json` ([permissions.md](permissions.md)). |
 | Approval prompt on every run | Allow `claude -p` and `claude --version` in Cursor's command allowlist, and check that nothing comes before `claude` in the command. See [permissions.md](permissions.md). |
-| Prompt to write the brief file | The skill could not use Cursor's project folder and fell back to a temp folder. See [permissions.md](permissions.md). |
+| Prompt to write the brief file | The path shown is outside the workspace or starts with a dot. The brief folder should be `<workspace>/subagent-briefs/`. If the path looks right, check that the skill is the 1.2.0 copy. See [permissions.md](permissions.md). |
 | The agent stopped routing through Claude Code mid-chat | Cursor attaches a slash-invoked skill to one message. Run `/use-claude-code-subagents` again. |
 | Native Windows (PowerShell, cmd) | Not supported. The skill needs a POSIX shell and stays in Cursor's native mode. |
 

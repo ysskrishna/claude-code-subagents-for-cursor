@@ -73,7 +73,7 @@ A good brief states the goal, the paths, any constraints and the return format. 
 ## 4. Run
 
 1. Pick the project folder: the folder that holds the agent file's `.cursor`, `.claude` or `.codex` folder (the current project for a user-level file). Use it as the Shell tool's `working_directory`. Claude Code finds `.claude/agents` from the working folder or a parent of it (tested), not from a sibling folder.
-2. Make a run folder `<dir>` for the files. Cursor's folder for this project (the parent of the terminals folder named in your environment, under `~/.cursor/projects/`) counts as inside the workspace, so writing there does not trigger an outside-workspace prompt. Use `<that folder>/subagent-briefs/<id>`, where `<id>` is a made-up run id (check it against the table; use a new one per run). If you do not know that folder, or the write is refused, fall back to `mktemp -d "${TMPDIR:-/tmp}/claude-subagent.XXXXXX"` (with `required_permissions: ["all"]`), call the printed path `<dir>`, and run `rm -rf "<dir>"` at the end instead of step 5 below.
+2. Make a run folder `<dir>` for the files: `<workspace root>/subagent-briefs/<id>`, where `<id>` is a made-up run id (check it against the table; use a new one per run) and the workspace root is the one named in your environment. It must be inside the workspace: Cursor asks before the Write tool creates a file outside it, and that includes `~/.cursor/projects/` and temp folders (observed). It must not start with a dot, because Cursor also asks before writing to dot-folders. Only if there is no workspace, fall back to `mktemp -d "${TMPDIR:-/tmp}/claude-subagent.XXXXXX"` (with `required_permissions: ["all"]`), call the printed path `<dir>`, and run `rm -rf "<dir>"` at the end.
 3. With the Write tool, write the brief to `<dir>/brief.txt`.
 4. Agent from `.claude/agents` or `~/.claude/agents` (Claude Code format):
 
@@ -87,7 +87,7 @@ claude -p --agent "<name>" --model "<mapped>" --permission-prompts none --output
 { "<name>": { "description": "<frontmatter description>", "prompt": "<body>", "model": "<mapped>" } }
 ```
 
-5. When no follow-up is pending, delete the files in `<dir>` with the Delete tool. If you cannot delete them, leave them.
+5. Leave the files in place. Cursor asks before deleting when its File-Deletion Protection is on, and the brief holds no secrets.
 
 - Add `"tools": [...]` to the JSON when the frontmatter has a `tools:` list. The `prompt` must be valid JSON: escape quotes and newlines from the body.
 - Editing agent: add `--permission-mode acceptEdits`. Read-only agent (`readonly: true`, or a `tools:` list without Edit/Write): omit it. Some harmless read-only shell commands may still be auto-allowed.
@@ -99,7 +99,7 @@ claude -p --agent "<name>" --model "<mapped>" --permission-prompts none --output
 - If `is_error` is `true`, `result` holds an error message, not the agent's answer (for example an inaccessible model), and `modelUsage` is empty. Report the error and do not treat it as the agent's output.
 - Otherwise answer from `result`, then one short line naming the model from `modelUsage` (for example "test-ro ran on claude-haiku-5-5"). Mention cost only if the user asks.
 - `permission_denials` non-empty: name what was blocked in the summary and finish the work that does not depend on it. Ask once, at the end, before rerunning with `--allowedTools "<tool>"` added. The user can also allow that tool for good in the project's Claude Code settings. Otherwise say nothing about it.
-- The agent asked a question: ask the user. To continue, keep `<dir>`, write the answer to `<dir>/followup.txt`, and rerun with the same flags as the first run (`--agent`, `--agents`, `--model`, `--permission-mode`) plus `--resume "<session_id>"`, reading `< "<dir>/followup.txt"`. Without `--agent` the resumed run loses the agent's tool limits (tested). Delete the files in `<dir>` after the last follow-up.
+- The agent asked a question: ask the user. To continue, keep `<dir>`, write the answer to `<dir>/followup.txt`, and rerun with the same flags as the first run (`--agent`, `--agents`, `--model`, `--permission-mode`) plus `--resume "<session_id>"`, reading `< "<dir>/followup.txt"`. Without `--agent` the resumed run loses the agent's tool limits (tested). Leave the files in `<dir>`.
 - Independent tasks may run in the background (`block_until_ms: 0`), each with its own `<dir>`. Keep the number modest.
 - Edits made this way bypass Cursor's review and undo. List the changed files in the summary.
 

@@ -62,5 +62,13 @@
   {
     "query": "run three explore subagents in parallel to map the repo layout",
     "should_trigger": false
+  },
+  {
+    "query": "how do I allowlist npm and git commands in Cursor's permissions.json?",
+    "should_trigger": false
+  },
+  {
+    "query": "cursor auto-review mode keeps blocking my docker compose command",
+    "should_trigger": false
   }
 ]

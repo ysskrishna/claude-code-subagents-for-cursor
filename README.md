@@ -83,6 +83,22 @@ The agent replies `Subagent mode: claude code`. From then on, each custom subage
 
 More in [docs/usage.md](docs/usage.md): how the skill loads on its own, what to expect, and how to check it works.
 
+<a id="run-without-approval-prompts"></a>
+
+<details>
+<summary><b>Run without approval prompts</b></summary>
+
+Use Cursor's **Auto-review** run mode (with the sandbox on) and allow two commands in Cursor Settings, Agents, Approvals & Execution, Command Allowlist:
+
+```text
+claude -p
+claude --version
+```
+
+Cursor's allowlist matches the start of a command, so the skill keeps `claude` first (no `cd` or `export` in front) and writes briefs to `subagent-briefs/` inside the workspace (add it to `.gitignore`), not `$TMPDIR`. In **Allowlist** mode the same two entries work; the `autoRun` instructions only apply to Auto-review. If you use a `terminalAllowlist` key in `permissions.json`, it replaces the list in Settings, so copy your other entries into it. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/permissions.md](docs/permissions.md).
+
+</details>
+
 ## Documentation
 
 | Guide | What is in it |
@@ -90,6 +106,7 @@ More in [docs/usage.md](docs/usage.md): how the skill loads on its own, what to 
 | [docs/README.md](docs/README.md) | Requirements, platforms, what is tested, when you do not need this |
 | [docs/usage.md](docs/usage.md) | Using the skill, verifying it, what to expect |
 | [docs/how-it-works.md](docs/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
+| [docs/permissions.md](docs/permissions.md) | Run without approval prompts: Cursor run modes, allowlists, Claude Code settings |
 | [docs/troubleshooting.md](docs/troubleshooting.md) | Symptoms and fixes |
 | [docs/security.md](docs/security.md) | What the skill can do, how it is limited, what to watch for |
 | [docs/development.md](docs/development.md) | Check scripts, CI, releases |

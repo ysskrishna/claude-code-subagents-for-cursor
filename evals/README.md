@@ -8,7 +8,7 @@ One file per skill: `evals/<skill-name>.json`. Each file is an array of `{ "quer
 Rules for adding queries:
 
 - Write them like real chat messages: casual, some typos, some context.
-- Keep at least 4 positives and 4 negatives per skill (this skill has 8 of each). Make most negatives close to the skill's territory (built-in Task use, other Claude Code questions).
+- Keep at least 4 positives and 4 negatives per skill (this skill has 8 positives and 10 negatives). Make most negatives close to the skill's territory (built-in Task use, other Claude Code questions).
 - Keep these files outside `skills/` so they are not shipped with installs.
 
 How to use them: `scripts/validate.sh` checks that each file exists and has the right shape. Running them against an agent is manual and optional (paste a prompt, see which skill loads). The method is described at <https://agentskills.io/skill-creation/optimizing-descriptions>.

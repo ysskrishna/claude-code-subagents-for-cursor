@@ -4,7 +4,7 @@
 
 [![Validate](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/validate.yml/badge.svg)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/validate.yml) [![Test installs](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/test-installs.yml/badge.svg)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/test-installs.yml) [![License: MIT](https://img.shields.io/github/license/ysskrishna/claude-code-subagents-for-cursor)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/LICENSE) [![GitHub release](https://img.shields.io/github/v/release/ysskrishna/claude-code-subagents-for-cursor?label=release)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases) [![Author site](https://img.shields.io/badge/author-ysskrishna.space-informational)](https://ysskrishna.space)
 
-[![skills.sh](https://skills.sh/b/ysskrishna/claude-code-subagents-for-cursor)](https://skills.sh/ysskrishna/claude-code-subagents-for-cursor)
+[![skills.sh](https://skills.sh/b/ysskrishna/claude-code-subagents-for-cursor)](https://skills.sh/ysskrishna/claude-code-subagents-for-cursor) [![Cursor Directory](https://img.shields.io/badge/Cursor%20Directory-listed-blue)](https://cursor.directory/plugins/claude-code-subagents-for-cursor)
 
 A Cursor skill that runs your **custom subagents through Claude Code**, so each one runs on the `model:` written in its own agent file instead of the parent chat's model. Invoke it with `/use-claude-code-subagents`.
 

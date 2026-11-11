@@ -23,7 +23,7 @@ This skill makes a Cursor agent run `claude` in your shell, outside Cursor's san
 
 ## Allowlisting `claude -p`
 
-To avoid approval prompts you can allow `claude -p` in Cursor ([permissions.md](permissions.md)). Cursor matches only the start of a command, so that entry also allows `claude -p` with flags the skill never uses. The skill itself never uses `--dangerously-skip-permissions`. Allow it only if you accept that.
+To avoid approval prompts you can allow `claude -p` in Cursor ([permissions.md](../guides/permissions.md)). Cursor matches only the start of a command, so that entry also allows `claude -p` with flags the skill never uses. The skill itself never uses `--dangerously-skip-permissions`. Allow it only if you accept that.
 
 ## What to watch for
 
@@ -37,4 +37,4 @@ skills.sh publishes automated audits of this skill at <https://skills.sh/ysskris
 
 ## Reporting a problem
 
-See [SECURITY.md](../SECURITY.md).
+See [SECURITY.md](../../SECURITY.md).

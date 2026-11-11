@@ -34,7 +34,7 @@ In Cursor, open **Customize, Plugins, Add, From GitHub Repository** and enter:
 github.com/ysskrishna/claude-code-subagents-for-cursor
 ```
 
-Choose **user scope** to get the skill in every project, or project scope to commit it for a team. More in [docs/cursor-setup.md](docs/cursor-setup.md).
+Choose **user scope** to get the skill in every project, or project scope to commit it for a team. More in [docs/install/cursor-setup.md](docs/install/cursor-setup.md).
 
 </details>
 
@@ -47,7 +47,7 @@ Choose **user scope** to get the skill in every project, or project scope to com
 npx skills add ysskrishna/claude-code-subagents-for-cursor -a cursor -g
 ```
 
-Installs to `~/.agents/skills/`, which Cursor loads. Drop `-g` to install into the current project. Update with `npx skills update`. Remove with `npx skills remove use-claude-code-subagents`. More in [docs/skills-sh-setup.md](docs/skills-sh-setup.md).
+Installs to `~/.agents/skills/`, which Cursor loads. Drop `-g` to install into the current project. Update with `npx skills update`. Remove with `npx skills remove use-claude-code-subagents`. More in [docs/install/skills-sh-setup.md](docs/install/skills-sh-setup.md).
 
 </details>
 
@@ -60,7 +60,7 @@ Installs to `~/.agents/skills/`, which Cursor loads. Drop `-g` to install into t
 gh skill install ysskrishna/claude-code-subagents-for-cursor --all --agent cursor --scope user
 ```
 
-Installs to `~/.cursor/skills/`. Without `--agent cursor`, `gh` installs for GitHub Copilot. Update with `gh skill update`. More in [docs/gh-cli-setup.md](docs/gh-cli-setup.md).
+Installs to `~/.cursor/skills/`. Without `--agent cursor`, `gh` installs for GitHub Copilot. Update with `gh skill update`. More in [docs/install/gh-cli-setup.md](docs/install/gh-cli-setup.md).
 
 </details>
 
@@ -69,7 +69,7 @@ Installs to `~/.cursor/skills/`. Without `--agent cursor`, `gh` installs for Git
 <details>
 <summary><b>Manual</b></summary>
 
-Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) folder, including `references/`, to `~/.cursor/skills/` (user) or `<project>/.cursor/skills/` (project). More in [docs/manual-setup.md](docs/manual-setup.md).
+Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) folder, including `references/`, to `~/.cursor/skills/` (user) or `<project>/.cursor/skills/` (project). More in [docs/install/manual-setup.md](docs/install/manual-setup.md).
 
 </details>
 
@@ -81,7 +81,7 @@ Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) 
 
 The agent replies `Subagent mode: claude code`. From then on, each custom subagent you ask for runs through Claude Code on its own model, and the reply ends with a line like `scout ran on claude-haiku-5-5`. Say **"use cursor subagents"** to switch back to Cursor's Task tool.
 
-More in [docs/usage.md](docs/usage.md): how the skill loads on its own, what to expect, and how to check it works.
+More in [docs/guides/usage.md](docs/guides/usage.md): how the skill loads on its own, what to expect, and how to check it works.
 
 <a id="run-without-approval-prompts"></a>
 
@@ -95,7 +95,7 @@ claude -p
 claude --version
 ```
 
-Cursor's allowlist matches the start of a command, so the skill keeps `claude` first (no `cd` or `export` in front) and writes briefs to `subagent-briefs/` inside the workspace (add it to `.gitignore`), not `$TMPDIR`. In **Allowlist** mode the same two entries work; the `autoRun` instructions only apply to Auto-review. If you use a `terminalAllowlist` key in `permissions.json`, it replaces the list in Settings, so copy your other entries into it. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/permissions.md](docs/permissions.md).
+Cursor's allowlist matches the start of a command, so the skill keeps `claude` first (no `cd` or `export` in front) and writes briefs to `subagent-briefs/` inside the workspace (add it to `.gitignore`), not `$TMPDIR`. In **Allowlist** mode the same two entries work; the `autoRun` instructions only apply to Auto-review. If you use a `terminalAllowlist` key in `permissions.json`, it replaces the list in Settings, so copy your other entries into it. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/guides/permissions.md](docs/guides/permissions.md).
 
 </details>
 
@@ -104,12 +104,12 @@ Cursor's allowlist matches the start of a command, so the skill keeps `claude` f
 | Guide | What is in it |
 |---|---|
 | [docs/README.md](docs/README.md) | Requirements, platforms, what is tested, when you do not need this |
-| [docs/usage.md](docs/usage.md) | Using the skill, verifying it, what to expect |
-| [docs/how-it-works.md](docs/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
-| [docs/permissions.md](docs/permissions.md) | Run without approval prompts: Cursor run modes, allowlists, Claude Code settings |
-| [docs/troubleshooting.md](docs/troubleshooting.md) | Symptoms and fixes |
-| [docs/security.md](docs/security.md) | What the skill can do, how it is limited, what to watch for |
-| [docs/development.md](docs/development.md) | Check scripts, CI, releases |
+| [docs/guides/usage.md](docs/guides/usage.md) | Using the skill, verifying it, what to expect |
+| [docs/reference/how-it-works.md](docs/reference/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
+| [docs/guides/permissions.md](docs/guides/permissions.md) | Run without approval prompts: Cursor run modes, allowlists, Claude Code settings |
+| [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md) | Symptoms and fixes |
+| [docs/reference/security.md](docs/reference/security.md) | What the skill can do, how it is limited, what to watch for |
+| [docs/contributing/development.md](docs/contributing/development.md) | Check scripts, CI, releases |
 
 Reporting a vulnerability: see [SECURITY.md](SECURITY.md).
 

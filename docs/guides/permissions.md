@@ -101,7 +101,7 @@ Rule syntax is in [Claude Code's permissions guide](https://code.claude.com/docs
 ## Trade-offs
 
 - Allowing `claude -p` allows **any** command that starts with it, including flags the skill never uses. The skill never uses `--dangerously-skip-permissions`, but the allowlist cannot stop a command that does, because matching looks only at the start. If that is too broad for you, use the steering route above and accept the occasional prompt.
-- Edits made by a routed subagent bypass Cursor's review and undo. See [security.md](security.md).
+- Edits made by a routed subagent bypass Cursor's review and undo. See [security.md](../reference/security.md).
 
 ## Check it works
 

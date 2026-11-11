@@ -18,11 +18,11 @@ The `model:` in the agent file is translated for Claude Code:
 
 The alias note: Cursor and Claude Code resolve aliases differently. When last checked (Cursor 3.27.22), Cursor mapped `haiku` to Haiku 4.5, which many plans have disabled, while Claude Code maps it to its latest Haiku. An agent with `model: haiku` can therefore run on a newer model through this skill than in Cursor. That is intended.
 
-The suffix list, test results and untested edge cases are in [`model-mapping.md`](../skills/use-claude-code-subagents/references/model-mapping.md).
+The suffix list, test results and untested edge cases are in [`model-mapping.md`](../../skills/use-claude-code-subagents/references/model-mapping.md).
 
 ## 3. The `claude` command
 
-- The command starts with `claude`: no `cd`, `export`, pipe or `;` around it. Cursor's allowlist matches the start of a command ([permissions.md](permissions.md)). The Shell tool's `working_directory` is the project folder, so Claude Code finds the agent file there (it also searches parent folders, tested).
+- The command starts with `claude`: no `cd`, `export`, pipe or `;` around it. Cursor's allowlist matches the start of a command ([permissions.md](../guides/permissions.md)). The Shell tool's `working_directory` is the project folder, so Claude Code finds the agent file there (it also searches parent folders, tested).
 - The brief is written to a file and read through stdin (`claude -p < file`), so the shell never parses it. `$VAR`, backticks, quotes and lines such as `BRIEF` reach the agent unchanged.
 - The files live in `<workspace root>/subagent-briefs/<id>/`. Cursor asks before it creates a file outside the workspace (including `~/.cursor/projects/` and temp folders), and before it writes to a dot-folder, so the folder is inside the workspace and has no leading dot. Add `subagent-briefs/` to `.gitignore`. Only when there is no workspace does the skill fall back to a `mktemp` folder.
 - Claude Code format agents (`.claude/agents`, `~/.claude/agents`) run with `--agent <name>`.

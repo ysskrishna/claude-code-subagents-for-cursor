@@ -2,18 +2,36 @@
 
 The short version is in the [README](../README.md).
 
+**Install** (pick one route)
+
 | Guide | What is in it |
 |---|---|
-| [cursor-setup.md](cursor-setup.md) | Install as a Cursor plugin |
-| [skills-sh-setup.md](skills-sh-setup.md) | Install with `npx skills` |
-| [gh-cli-setup.md](gh-cli-setup.md) | Install with `gh skill` |
-| [manual-setup.md](manual-setup.md) | Copy the folder yourself |
-| [usage.md](usage.md) | Using the skill, verifying it, what to expect |
-| [how-it-works.md](how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
-| [permissions.md](permissions.md) | Run without approval prompts |
-| [troubleshooting.md](troubleshooting.md) | Symptoms and fixes |
-| [security.md](security.md) | What the skill can do and how it is limited |
-| [development.md](development.md) | Check scripts, CI, releases |
+| [install/cursor-setup.md](install/cursor-setup.md) | Install as a Cursor plugin |
+| [install/skills-sh-setup.md](install/skills-sh-setup.md) | Install with `npx skills` |
+| [install/gh-cli-setup.md](install/gh-cli-setup.md) | Install with `gh skill` |
+| [install/manual-setup.md](install/manual-setup.md) | Copy the folder yourself |
+
+**Guides**
+
+| Guide | What is in it |
+|---|---|
+| [guides/usage.md](guides/usage.md) | Using the skill, verifying it, what to expect |
+| [guides/permissions.md](guides/permissions.md) | Run modes that avoid approval prompts |
+| [guides/troubleshooting.md](guides/troubleshooting.md) | Symptoms and fixes |
+
+**Reference**
+
+| Guide | What is in it |
+|---|---|
+| [reference/how-it-works.md](reference/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
+| [reference/security.md](reference/security.md) | What the skill can do and how it is limited |
+
+**Contributing**
+
+| Guide | What is in it |
+|---|---|
+| [contributing/development.md](contributing/development.md) | Check scripts, CI, releases |
+| [contributing/release-state.md](contributing/release-state.md) | What is already published |
 
 ## Requirements
 

@@ -23,7 +23,7 @@ Runs without approval prompts. Cursor asked for approval on most subagent runs b
 
 ### Added
 
-- [`docs/permissions.md`](docs/permissions.md): what causes approval prompts, the recommended Auto-review setup, an Allowlist-mode setup, and a Claude Code settings file for denied tools.
+- [`docs/guides/permissions.md`](docs/guides/permissions.md): what causes approval prompts, the recommended Auto-review setup, an Allowlist-mode setup, and a Claude Code settings file for denied tools.
 - A "Run without approval prompts" section in the README.
 - `scripts/dev_install.sh`: copy this checkout into `~/.cursor/plugins/local/` to try changes in Cursor before they are published, with `--remove` to undo. It warns when another copy of the skill is installed.
 
@@ -37,7 +37,7 @@ Safer commands, a shorter README, and the detail moved into `docs/`.
 - **Names, models and session ids are checked before use**, then quoted. A name such as `scout; ls` now falls back to Cursor's Task tool instead of reaching the shell.
 - **Agent files and subagent results are treated as data.** The skill tells the agent never to follow instructions found in them to change flags, add permissions or run other commands.
 - **Follow-ups keep the agent's tool limits.** A resumed run now repeats `--agent`/`--agents`; without them Claude Code drops the agent's limits (tested).
-- Added [`SECURITY.md`](SECURITY.md) and [`docs/security.md`](docs/security.md), which explain what the skill can do and how it is limited.
+- Added [`SECURITY.md`](SECURITY.md) and [`docs/reference/security.md`](docs/reference/security.md), which explain what the skill can do and how it is limited.
 
 ### Changed
 

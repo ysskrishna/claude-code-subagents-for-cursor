@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Troubleshooting
-    url: https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/docs/troubleshooting.md
+    url: https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/docs/guides/troubleshooting.md
     about: Common symptoms and fixes.
   - name: Report a security problem
     url: https://github.com/ysskrishna/claude-code-subagents-for-cursor/security/advisories/new

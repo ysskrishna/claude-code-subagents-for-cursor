@@ -20,4 +20,4 @@ This repo ships a skill (instructions for an AI agent) and some scripts. Example
 - A way around the name, model or session id checks.
 - A script in `scripts/` or a workflow in `.github/` that can be abused.
 
-How the skill is limited, and what it cannot limit, is described in [docs/security.md](docs/security.md). Behavior listed there as by design (the elevated Shell permission, the skipped trust dialog, edits that bypass Cursor's review) is not a vulnerability, but suggestions to narrow it are welcome as normal issues.
+How the skill is limited, and what it cannot limit, is described in [docs/reference/security.md](docs/reference/security.md). Behavior listed there as by design (the elevated Shell permission, the skipped trust dialog, edits that bypass Cursor's review) is not a vulnerability, but suggestions to narrow it are welcome as normal issues.

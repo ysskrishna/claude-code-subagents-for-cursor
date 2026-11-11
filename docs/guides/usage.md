@@ -18,7 +18,7 @@ Cursor attaches a slash-invoked skill to that one message ([docs](https://cursor
 2. Run `/use-claude-code-subagents`, then ask the chat to run that agent on a small task.
 3. The reply ends with a line like `scout ran on claude-haiku-5-5`. That model comes from Claude Code's `modelUsage`, not from the agent file, so it shows what actually ran.
 
-A full worked run is in [`example.md`](../skills/use-claude-code-subagents/references/example.md).
+A full worked run is in [`example.md`](../../skills/use-claude-code-subagents/references/example.md). To try it on a ready-made project, with one read-only and one editing agent, use [`examples/subagents`](../../examples/subagents).
 
 ## What to expect
 
@@ -27,6 +27,6 @@ A full worked run is in [`example.md`](../skills/use-claude-code-subagents/refer
 - A subagent cannot ask you mid-run. It returns the question and the parent asks you.
 - **Edits made by a routed subagent bypass Cursor's review and undo.** The agent lists changed files in its summary. Review them.
 - `claude -p` skips Claude Code's workspace trust dialog. Use this only in projects you trust.
-- The first run of `claude` may show a Cursor approval prompt (Claude Code needs network and writes to `~/.claude`, outside Cursor's sandbox). To avoid prompts, allow `claude -p` and `claude --version` in Cursor's command allowlist. See [permissions.md](permissions.md).
+- The first run of `claude` may show a Cursor approval prompt (Claude Code needs network and writes to `~/.claude`, outside Cursor's sandbox). To avoid prompts, use the Run Everything or Auto-Review run mode. See [permissions.md](permissions.md).
 - The subagent sees Claude Code's MCP config, not Cursor's. An agent that relies on a Cursor-only MCP server may lack that tool.
 - Agents whose `model:` is missing, `inherit`, or not Anthropic keep using Cursor's Task tool. The agent says so in one line.

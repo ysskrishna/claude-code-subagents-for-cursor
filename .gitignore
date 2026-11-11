@@ -1,4 +1,6 @@
 workspace/
 .cursor/
 __pycache__/
-subagent-briefs/
+
+# Keep the example agents in examples/
+!examples/subagents/.cursor/

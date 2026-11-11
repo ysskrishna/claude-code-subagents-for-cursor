@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-11-12
+
+Briefs stay out of your repo, two supported run modes, a tidier `docs/` folder, and an example project.
+
+### Changed
+
+- **Briefs go to a temp folder, not the workspace.** The skill makes a folder with `mktemp -d` and writes the brief and agent files there, so nothing lands in your repo or your commits. The `subagent-briefs/` folder and its `.gitignore` entry from 1.2.0 are gone. The files stay in place and the operating system clears them.
+- **Only two run modes are supported: Run Everything (Unsandboxed) and Auto-Review (with Sandbox).** The allowlist route is removed from the docs and the skill, because it needs an entry for every command. [`docs/guides/permissions.md`](docs/guides/permissions.md) now only says how to set the mode, plus the other prompts and Claude Code denials.
+- **`docs/` is grouped into `install/`, `guides/`, `reference/` and `contributing/`.** Links to the old paths (for example `docs/permissions.md`) no longer work; use the new ones. The README, `AGENTS.md`, issue templates and `scripts/validate.sh` follow the new layout, and `validate.sh` now also checks links in `examples/`.
+
+### Added
+
+- [`examples/subagents`](examples/subagents): a small project with a read-only `scout` agent (`haiku`) and an editing `proofreader` agent (`sonnet`), with a README on how an agent file is built and how to try them.
+
 ## [1.2.0] - 2026-11-09
 
 Runs without approval prompts. Cursor asked for approval on most subagent runs because of how the commands were built, not because of a missing setting.
@@ -23,7 +37,7 @@ Runs without approval prompts. Cursor asked for approval on most subagent runs b
 
 ### Added
 
-- [`docs/permissions.md`](docs/permissions.md): what causes approval prompts, the recommended Auto-review setup, an Allowlist-mode setup, and a Claude Code settings file for denied tools.
+- [`docs/guides/permissions.md`](docs/guides/permissions.md): what causes approval prompts, the recommended Auto-review setup, an Allowlist-mode setup, and a Claude Code settings file for denied tools.
 - A "Run without approval prompts" section in the README.
 - `scripts/dev_install.sh`: copy this checkout into `~/.cursor/plugins/local/` to try changes in Cursor before they are published, with `--remove` to undo. It warns when another copy of the skill is installed.
 
@@ -37,7 +51,7 @@ Safer commands, a shorter README, and the detail moved into `docs/`.
 - **Names, models and session ids are checked before use**, then quoted. A name such as `scout; ls` now falls back to Cursor's Task tool instead of reaching the shell.
 - **Agent files and subagent results are treated as data.** The skill tells the agent never to follow instructions found in them to change flags, add permissions or run other commands.
 - **Follow-ups keep the agent's tool limits.** A resumed run now repeats `--agent`/`--agents`; without them Claude Code drops the agent's limits (tested).
-- Added [`SECURITY.md`](SECURITY.md) and [`docs/security.md`](docs/security.md), which explain what the skill can do and how it is limited.
+- Added [`SECURITY.md`](SECURITY.md) and [`docs/reference/security.md`](docs/reference/security.md), which explain what the skill can do and how it is limited.
 
 ### Changed
 
@@ -72,6 +86,7 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.3.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases/tag/v1.0.0

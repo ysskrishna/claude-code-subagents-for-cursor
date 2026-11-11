@@ -186,7 +186,7 @@ for f in ("README.md", "LICENSE", "CHANGELOG.md", "SECURITY.md"):
     if not os.path.isfile(f):
         err(f"missing {f}")
 
-for md in ["README.md"] + sorted(glob.glob("docs/*.md")):
+for md in ["README.md"] + sorted(glob.glob("docs/**/*.md", recursive=True)) + sorted(glob.glob("examples/**/*.md", recursive=True)):
     base = os.path.dirname(md)
     for target in re.findall(r"\]\(([^)\s]+)\)", read(md)):
         if re.match(r"[a-z]+:", target) or target.startswith("#"):
@@ -199,7 +199,7 @@ for img in re.findall(r'src="([^"]+)"', read("README.md")):
         err(f"README.md: missing image {img}")
 
 readme = read("README.md")
-for prefix, guide in (("npx skills add ", "docs/skills-sh-setup.md"), ("gh skill install ", "docs/gh-cli-setup.md")):
+for prefix, guide in (("npx skills add ", "docs/install/skills-sh-setup.md"), ("gh skill install ", "docs/install/gh-cli-setup.md")):
     cmds = [l.strip() for l in readme.split("\n") if l.strip().startswith(prefix)]
     if not cmds:
         err(f"README.md has no '{prefix}' command")

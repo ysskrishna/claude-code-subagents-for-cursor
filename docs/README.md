@@ -2,18 +2,36 @@
 
 The short version is in the [README](../README.md).
 
+**Install** (pick one route)
+
 | Guide | What is in it |
 |---|---|
-| [cursor-setup.md](cursor-setup.md) | Install as a Cursor plugin |
-| [skills-sh-setup.md](skills-sh-setup.md) | Install with `npx skills` |
-| [gh-cli-setup.md](gh-cli-setup.md) | Install with `gh skill` |
-| [manual-setup.md](manual-setup.md) | Copy the folder yourself |
-| [usage.md](usage.md) | Using the skill, verifying it, what to expect |
-| [how-it-works.md](how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
-| [permissions.md](permissions.md) | Run without approval prompts |
-| [troubleshooting.md](troubleshooting.md) | Symptoms and fixes |
-| [security.md](security.md) | What the skill can do and how it is limited |
-| [development.md](development.md) | Check scripts, CI, releases |
+| [install/cursor-setup.md](install/cursor-setup.md) | Install as a Cursor plugin |
+| [install/skills-sh-setup.md](install/skills-sh-setup.md) | Install with `npx skills` |
+| [install/gh-cli-setup.md](install/gh-cli-setup.md) | Install with `gh skill` |
+| [install/manual-setup.md](install/manual-setup.md) | Copy the folder yourself |
+
+**Guides**
+
+| Guide | What is in it |
+|---|---|
+| [guides/usage.md](guides/usage.md) | Using the skill, verifying it, what to expect |
+| [guides/permissions.md](guides/permissions.md) | Run modes that avoid approval prompts |
+| [guides/troubleshooting.md](guides/troubleshooting.md) | Symptoms and fixes |
+
+**Reference**
+
+| Guide | What is in it |
+|---|---|
+| [reference/how-it-works.md](reference/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
+| [reference/security.md](reference/security.md) | What the skill can do and how it is limited |
+
+**Contributing**
+
+| Guide | What is in it |
+|---|---|
+| [contributing/development.md](contributing/development.md) | Check scripts, CI, releases |
+| [contributing/release-state.md](contributing/release-state.md) | What is already published |
 
 ## Requirements
 
@@ -36,7 +54,8 @@ The short version is in the [README](../README.md).
 | Date | Cursor | Claude Code | What was run |
 |---|---|---|---|
 | 2026-11-02 | 3.27.22 | 2.1.310 | Briefs through stdin (shell characters and lines such as `BRIEF` arrive unchanged); `--agents <file>` with stdin; `--resume` with and without `--agent`; both install routes |
-| 2026-11-09 | 3.29.9 | 2.1.318 | `--agent` resolved from the Shell tool's `working_directory` and from a subfolder of it; brief read through stdin from a file; the three check scripts. Cursor's prompts were checked by hand: a Write under `~/.cursor/projects/` still asked, so briefs now go inside the workspace (not yet re-checked) |
+| 2026-11-09 | 3.29.9 | 2.1.318 | `--agent` resolved from the Shell tool's `working_directory` and from a subfolder of it; brief read through stdin from a file; the three check scripts. Cursor's prompts were checked by hand: a Write under `~/.cursor/projects/` still asked, so briefs moved into the workspace (superseded by the next row) |
+| 2026-11-12 | 3.29.15 | 2.1.318 | Briefs and `--agents` files written with the Write tool into a `mktemp -d` folder outside the workspace, then read through stdin; the example `scout` (read-only) and `proofreader` (`--permission-mode acceptEdits`) agents; the three check scripts. No prompts appeared in the run mode active at the time (not recorded). Auto-Review (with Sandbox) was not run |
 
 These versions will age. If something behaves differently on yours, [open an issue](https://github.com/ysskrishna/claude-code-subagents-for-cursor/issues/new/choose) with your versions.
 

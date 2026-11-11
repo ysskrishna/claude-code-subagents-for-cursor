@@ -10,7 +10,7 @@ bash scripts/check_claude_flags.sh # every claude flag the skill uses exists
 bash scripts/test_installs.sh all  # skills.sh and gh routes, in a throwaway HOME
 ```
 
-- `validate.sh` checks both manifests against Cursor's plugin schemas (vendored in [`schemas/`](../schemas/), from [cursor/plugins](https://github.com/cursor/plugins)), the skill's frontmatter, size, references and trigger evals ([`evals/`](../evals/)), that versions agree across `plugin.json`, `SKILL.md` and the CHANGELOG, and that links in the README and `docs/` resolve.
+- `validate.sh` checks both manifests against Cursor's plugin schemas (vendored in [`schemas/`](../../schemas), from [cursor/plugins](https://github.com/cursor/plugins)), the skill's frontmatter, size, references and trigger evals ([`evals/`](../../evals)), that versions agree across `plugin.json`, `SKILL.md` and the CHANGELOG, and that links in the README and `docs/` resolve.
 - `check_claude_flags.sh` needs `claude` installed. It fails when a flag used in `SKILL.md` is missing from `claude --help`.
 - `test_installs.sh` clones the committed HEAD, so commit before running it.
 
@@ -44,5 +44,5 @@ Then run **Developer: Reload Window** in Cursor and start a new chat. Run the sc
 | Minimum Claude Code version | `SKILL.md` (preflight) and the Requirements list in `docs/README.md` |
 | Model suffixes to strip | `skills/use-claude-code-subagents/references/model-mapping.md` |
 | Plugin version | `.cursor-plugin/plugin.json` (mirrored in `SKILL.md` and checked) |
-| Last shipped release (tag, commit, URL) | `docs/release-state.md` |
+| Last shipped release (tag, commit, URL) | `docs/contributing/release-state.md` |
 | Versions last verified | `docs/README.md` |

@@ -81,7 +81,7 @@ Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) 
 
 The agent replies `Subagent mode: claude code`. From then on, each custom subagent you ask for runs through Claude Code on its own model, and the reply ends with a line like `scout ran on claude-haiku-5-5`. Say **"use cursor subagents"** to switch back to Cursor's Task tool.
 
-More in [docs/guides/usage.md](docs/guides/usage.md): how the skill loads on its own, what to expect, and how to check it works.
+More in [docs/guides/usage.md](docs/guides/usage.md): how the skill loads on its own, what to expect, and how to check it works. To try it on a ready-made project with two agents, see [examples/subagents](examples/subagents).
 
 <a id="run-without-approval-prompts"></a>
 

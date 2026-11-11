@@ -12,7 +12,8 @@ skills/use-claude-code-subagents/
   SKILL.md           the skill; keep it short
   references/        model-mapping.md (suffix rules), example.md (worked example)
 evals/               trigger queries for the skill (see evals/README.md)
-docs/                install guides, usage, how it works, troubleshooting, security, development
+docs/                install/ guides/ reference/ contributing/ (see docs/README.md)
+examples/            a small project with two custom subagents to try the skill on
 schemas/             Cursor's plugin schemas, vendored; do not hand-edit
 scripts/             validate.sh, check_claude_flags.sh, test_installs.sh
 SECURITY.md  CHANGELOG.md  README.md

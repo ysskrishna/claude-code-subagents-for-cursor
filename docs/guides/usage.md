@@ -18,7 +18,7 @@ Cursor attaches a slash-invoked skill to that one message ([docs](https://cursor
 2. Run `/use-claude-code-subagents`, then ask the chat to run that agent on a small task.
 3. The reply ends with a line like `scout ran on claude-haiku-5-5`. That model comes from Claude Code's `modelUsage`, not from the agent file, so it shows what actually ran.
 
-A full worked run is in [`example.md`](../../skills/use-claude-code-subagents/references/example.md).
+A full worked run is in [`example.md`](../../skills/use-claude-code-subagents/references/example.md). To try it on a ready-made project, with one read-only and one editing agent, use [`examples/subagents`](../../examples/subagents).
 
 ## What to expect
 

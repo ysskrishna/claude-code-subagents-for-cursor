@@ -1,0 +1,7 @@
+retry:
+  max_attempts: 3
+  initial_delay_ms: 200
+  backoff_multiplier: 2
+  retry_on:
+    - network_error
+    - http_5xx

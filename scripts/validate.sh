@@ -186,7 +186,7 @@ for f in ("README.md", "LICENSE", "CHANGELOG.md", "SECURITY.md"):
     if not os.path.isfile(f):
         err(f"missing {f}")
 
-for md in ["README.md"] + sorted(glob.glob("docs/**/*.md", recursive=True)):
+for md in ["README.md"] + sorted(glob.glob("docs/**/*.md", recursive=True)) + sorted(glob.glob("examples/**/*.md", recursive=True)):
     base = os.path.dirname(md)
     for target in re.findall(r"\]\(([^)\s]+)\)", read(md)):
         if re.match(r"[a-z]+:", target) or target.startswith("#"):

@@ -27,6 +27,6 @@ A full worked run is in [`example.md`](../../skills/use-claude-code-subagents/re
 - A subagent cannot ask you mid-run. It returns the question and the parent asks you.
 - **Edits made by a routed subagent bypass Cursor's review and undo.** The agent lists changed files in its summary. Review them.
 - `claude -p` skips Claude Code's workspace trust dialog. Use this only in projects you trust.
-- The first run of `claude` may show a Cursor approval prompt (Claude Code needs network and writes to `~/.claude`, outside Cursor's sandbox). To avoid prompts, allow `claude -p` and `claude --version` in Cursor's command allowlist. See [permissions.md](permissions.md).
+- The first run of `claude` may show a Cursor approval prompt (Claude Code needs network and writes to `~/.claude`, outside Cursor's sandbox). To avoid prompts, use the Run Everything or Auto-Review run mode. See [permissions.md](permissions.md).
 - The subagent sees Claude Code's MCP config, not Cursor's. An agent that relies on a Cursor-only MCP server may lack that tool.
 - Agents whose `model:` is missing, `inherit`, or not Anthropic keep using Cursor's Task tool. The agent says so in one line.

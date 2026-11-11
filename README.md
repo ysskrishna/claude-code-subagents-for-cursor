@@ -88,14 +88,12 @@ More in [docs/guides/usage.md](docs/guides/usage.md): how the skill loads on its
 <details>
 <summary><b>Run without approval prompts</b></summary>
 
-Use Cursor's **Auto-review** run mode (with the sandbox on) and allow two commands in Cursor Settings, Agents, Approvals & Execution, Command Allowlist:
+Claude Code runs outside Cursor's sandbox, so pick a run mode that allows it in Cursor Settings, Agents, Approvals & Execution:
 
-```text
-claude -p
-claude --version
-```
+- **Auto-Review (with Sandbox)**: suggested. Commands outside the sandbox go through a safety check.
+- **Run Everything (Unsandboxed)**: no prompts at all, for projects you trust.
 
-Cursor's allowlist matches the start of a command, so the skill keeps `claude` first (no `cd` or `export` in front) and writes briefs to `subagent-briefs/` inside the workspace (add it to `.gitignore`), not `$TMPDIR`. In **Allowlist** mode the same two entries work; the `autoRun` instructions only apply to Auto-review. If you use a `terminalAllowlist` key in `permissions.json`, it replaces the list in Settings, so copy your other entries into it. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/guides/permissions.md](docs/guides/permissions.md).
+The Allowlist modes are not supported: they need an entry for every command. Briefs are written to a temp folder, not your repo. Details, other prompts (MCP tools, fetch) and trade-offs: [docs/guides/permissions.md](docs/guides/permissions.md).
 
 </details>
 
@@ -106,7 +104,7 @@ Cursor's allowlist matches the start of a command, so the skill keeps `claude` f
 | [docs/README.md](docs/README.md) | Requirements, platforms, what is tested, when you do not need this |
 | [docs/guides/usage.md](docs/guides/usage.md) | Using the skill, verifying it, what to expect |
 | [docs/reference/how-it-works.md](docs/reference/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
-| [docs/guides/permissions.md](docs/guides/permissions.md) | Run without approval prompts: Cursor run modes, allowlists, Claude Code settings |
+| [docs/guides/permissions.md](docs/guides/permissions.md) | Run without approval prompts: Cursor run modes, Claude Code settings |
 | [docs/guides/troubleshooting.md](docs/guides/troubleshooting.md) | Symptoms and fixes |
 | [docs/reference/security.md](docs/reference/security.md) | What the skill can do, how it is limited, what to watch for |
 | [docs/contributing/development.md](docs/contributing/development.md) | Check scripts, CI, releases |

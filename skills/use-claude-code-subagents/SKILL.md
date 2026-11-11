@@ -34,13 +34,12 @@ Skip for Cursor's built-in subagents (`explore`, `generalPurpose`, ...), for Clo
   |---|---|
   | agent name | `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$` |
   | mapped model | `^[A-Za-z0-9][A-Za-z0-9._-]*$` |
-  | run id | `^[a-z0-9]{6,16}$` |
   | session id | a UUID |
 
 - Put every value in double quotes. The brief and the agent's text never go on the command line or in a heredoc: write them to files with the Write tool (step 4).
-- Start the `claude` command with the word `claude`, as one plain command. No `cd`, `export`, `VAR=value`, `$(...)`, pipe or `;` around it. Cursor's allowlist matches the start of a command, so anything in front makes Cursor ask. Use the Shell tool's `working_directory` instead of `cd`, and read the JSON from the command's output.
+- Start the `claude` command with the word `claude`, as one plain command. No `cd`, `export`, `VAR=value`, `$(...)`, pipe or `;` around it. Keep it easy for Cursor's run mode to judge and for the user to read. Use the Shell tool's `working_directory` instead of `cd`, and read the JSON from the command's output.
 - Never put a password, token or key in a brief or an agent definition. Name the environment variable or file the agent should read it from.
-- Use `required_permissions: ["all"]` only for `claude --version` and the `claude` run (and the fallback folder steps in step 4). Claude Code needs network and writes to `~/.claude`, which the sandbox blocks. A command on the user's allowlist runs outside the sandbox anyway, so `all` adds no prompt there.
+- Use `required_permissions: ["all"]` only for `claude --version`, the `claude` run and the `mktemp` step in step 4. Claude Code needs network and writes to `~/.claude`, which the sandbox blocks.
 - Before the first run of an agent from a project folder, say in one line which file and permission mode you use (for example "`.cursor/agents/scout.md`, read-only").
 
 ## 1. Resolve the agent
@@ -73,7 +72,13 @@ A good brief states the goal, the paths, any constraints and the return format. 
 ## 4. Run
 
 1. Pick the project folder: the folder that holds the agent file's `.cursor`, `.claude` or `.codex` folder (the current project for a user-level file). Use it as the Shell tool's `working_directory`. Claude Code finds `.claude/agents` from the working folder or a parent of it (tested), not from a sibling folder.
-2. Make a run folder `<dir>` for the files: `<workspace root>/subagent-briefs/<id>`, where `<id>` is a made-up run id (check it against the table; use a new one per run) and the workspace root is the one named in your environment. It must be inside the workspace: Cursor asks before the Write tool creates a file outside it, and that includes `~/.cursor/projects/` and temp folders (observed). It must not start with a dot, because Cursor also asks before writing to dot-folders. Only if there is no workspace, fall back to `mktemp -d "${TMPDIR:-/tmp}/claude-subagent.XXXXXX"` (with `required_permissions: ["all"]`), call the printed path `<dir>`, and run `rm -rf "<dir>"` at the end.
+2. Make a run folder outside the workspace, so briefs never land in the user's repo. Run this with `required_permissions: ["all"]` and call the printed path `<dir>`:
+
+```bash
+mktemp -d "${TMPDIR:-/tmp}/claude-subagent.XXXXXX"
+```
+
+   Use a new folder for each run. Use the printed path as it is, not `$TMPDIR`: the Write tool takes a literal path. A double slash in it is harmless (tested).
 3. With the Write tool, write the brief to `<dir>/brief.txt`.
 4. Agent from `.claude/agents` or `~/.claude/agents` (Claude Code format):
 
@@ -87,7 +92,7 @@ claude -p --agent "<name>" --model "<mapped>" --permission-prompts none --output
 { "<name>": { "description": "<frontmatter description>", "prompt": "<body>", "model": "<mapped>" } }
 ```
 
-5. Leave the files in place. Cursor asks before deleting when its File-Deletion Protection is on, and the brief holds no secrets.
+5. Leave the files in place. The operating system clears its temp folder, the brief holds no secrets, and a delete step can make Cursor ask.
 
 - Add `"tools": [...]` to the JSON when the frontmatter has a `tools:` list. The `prompt` must be valid JSON: escape quotes and newlines from the body.
 - Editing agent: add `--permission-mode acceptEdits`. Read-only agent (`readonly: true`, or a `tools:` list without Edit/Write): omit it. Some harmless read-only shell commands may still be auto-allowed.
@@ -109,6 +114,6 @@ claude -p --agent "<name>" --model "<mapped>" --permission-prompts none --output
 - Never use `--dangerously-skip-permissions`.
 - A subagent run is a terminal command, not a Cursor subagent card, and cannot be steered mid-run.
 - The subagent sees Claude Code's MCP config, not Cursor's. An agent that depends on a Cursor-only MCP server may lack that tool.
-- If Cursor still asks before every `claude` run, the user has not allowed `claude -p` in Cursor's run settings. Point them to <https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/docs/permissions.md>.
+- If Cursor asks before every shell command or before writing the brief, the run mode is stricter than this skill expects. Point the user to <https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/docs/guides/permissions.md>.
 
 A full worked run is in [references/example.md](references/example.md).

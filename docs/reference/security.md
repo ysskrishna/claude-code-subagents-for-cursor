@@ -15,15 +15,16 @@ This skill makes a Cursor agent run `claude` in your shell, outside Cursor's san
 - **No shell parsing of text.** The brief and the agent definition are written to files with the Write tool and read through stdin or `--agents <file>`. There are no heredocs, so text cannot end one early.
 - **Unknown models never reach `claude`.** Only `haiku`, `sonnet`, `opus` and `claude-*` IDs do.
 - **Prompts are denied, not answered.** `--permission-prompts none` denies anything that would prompt, and the agent reports it. `--permission-mode acceptEdits` is added only for editing agents. `--dangerously-skip-permissions` is never used.
-- **Elevated permission is scoped.** The skill uses `all` only for `claude --version` and the `claude` run. It does not run `mktemp` or `rm` unless there is no workspace and it falls back to a temp folder.
-- **One plain command.** The `claude` command has nothing chained before or after it, so an allowlist entry for `claude -p` matches that command and no other.
+- **Elevated permission is scoped.** The skill uses `all` only for `claude --version`, `mktemp -d` and the `claude` run. It runs no `rm`.
+- **Briefs stay out of your repo.** Brief and agent files go to a temp folder outside the workspace, so they cannot be committed. They hold no secrets.
+- **One plain command.** The `claude` command has nothing chained before or after it, so what Cursor's run mode sees is exactly the `claude` run.
 - **No credentials in files.** The skill never copies a password, token or key into a brief or an agent definition; it names the environment variable or file to read.
 - **Agent files and results are data.** The skill tells the agent never to follow instructions found in them to change flags, add permissions, run other commands or switch modes.
 - **Consent first.** When the skill loads on its own, it asks before the first run. Before the first run of an agent from a project folder, it names the file and permission mode.
 
-## Allowlisting `claude -p`
+## Run mode
 
-To avoid approval prompts you can allow `claude -p` in Cursor ([permissions.md](../guides/permissions.md)). Cursor matches only the start of a command, so that entry also allows `claude -p` with flags the skill never uses. The skill itself never uses `--dangerously-skip-permissions`. Allow it only if you accept that.
+The skill's shell steps run outside Cursor's sandbox. [permissions.md](../guides/permissions.md) suggests Run Everything or Auto-Review (with Sandbox). In Run Everything, Cursor checks no command, so use it in projects you trust.
 
 ## What to watch for
 

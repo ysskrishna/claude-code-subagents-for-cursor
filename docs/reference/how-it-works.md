@@ -22,14 +22,14 @@ The suffix list, test results and untested edge cases are in [`model-mapping.md`
 
 ## 3. The `claude` command
 
-- The command starts with `claude`: no `cd`, `export`, pipe or `;` around it. Cursor's allowlist matches the start of a command ([permissions.md](../guides/permissions.md)). The Shell tool's `working_directory` is the project folder, so Claude Code finds the agent file there (it also searches parent folders, tested).
+- The command starts with `claude`: no `cd`, `export`, pipe or `;` around it, so it is easy for Cursor's run mode to judge ([permissions.md](../guides/permissions.md)). The Shell tool's `working_directory` is the project folder, so Claude Code finds the agent file there (it also searches parent folders, tested).
 - The brief is written to a file and read through stdin (`claude -p < file`), so the shell never parses it. `$VAR`, backticks, quotes and lines such as `BRIEF` reach the agent unchanged.
-- The files live in `<workspace root>/subagent-briefs/<id>/`. Cursor asks before it creates a file outside the workspace (including `~/.cursor/projects/` and temp folders), and before it writes to a dot-folder, so the folder is inside the workspace and has no leading dot. Add `subagent-briefs/` to `.gitignore`. Only when there is no workspace does the skill fall back to a `mktemp` folder.
+- The files live in a fresh temp folder made with `mktemp -d`, outside your workspace, so briefs never end up in your repo or your commits.
 - Claude Code format agents (`.claude/agents`, `~/.claude/agents`) run with `--agent <name>`.
 - Cursor format agents (`.cursor/agents`, `.codex/agents`) are written as JSON to a file in the same run folder and passed with `--agents <file>`.
 - Editing agents get `--permission-mode acceptEdits`. Read-only agents get none.
 - Every run uses `--permission-prompts none`: anything Claude Code would prompt for is denied and reported back to you. Nothing runs with permissions skipped.
 - A follow-up to the same agent repeats `--agent`/`--agents`/`--model` and adds `--resume <session id>`. Resuming without them drops the agent's tool limits (tested).
-- The files stay in place: Cursor asks before deleting when its File-Deletion Protection is on, and a brief holds no secrets. Clear the folder when you like.
+- The files stay in place: the operating system clears its temp folder, a brief holds no secrets, and a delete step can make Cursor ask.
 
 See [security.md](security.md) for the checks applied before a command is built.

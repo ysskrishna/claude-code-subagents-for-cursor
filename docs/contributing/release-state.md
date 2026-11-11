@@ -4,10 +4,10 @@ For maintainers and coding agents. Update this file **after** each tagged releas
 
 | Field | Value |
 | --- | --- |
-| Last shipped version | 1.2.0 |
-| Last tag | `v1.2.0` |
-| Tagged from `main` at | `76a70d1` |
-| GitHub Release | https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases/tag/v1.2.0 |
+| Last shipped version | 1.3.0 |
+| Last tag | `v1.3.0` |
+| Tagged from `main` at | `1bc2d0f` |
+| GitHub Release | https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases/tag/v1.3.0 |
 
 **Next release:** bump version in `.cursor-plugin/plugin.json` and `skills/use-claude-code-subagents/SKILL.md`, add a `CHANGELOG.md` section, merge to `main`, run the three check scripts, push an annotated `vX.Y.Z` tag. Full steps: [development.md#releases](development.md#releases) and [AGENTS.md](../../AGENTS.md#releases).
 

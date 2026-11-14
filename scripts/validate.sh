@@ -181,6 +181,59 @@ if os.path.isfile("CHANGELOG.md"):
     else:
         ok(f"CHANGELOG top version {pver} matches plugin.json")
 
+# 6b. Claude Code, npm, and OpenClaw manifests carry the same version
+def same_version(path, data):
+    if not isinstance(data, dict):
+        return
+    if data.get("version") != pver:
+        err(f"{path} version {data.get('version')!r} differs from plugin.json {pver!r}")
+    else:
+        ok(f"{path} version {pver}")
+
+claude_plugin = load_json(".claude-plugin/plugin.json")
+same_version(".claude-plugin/plugin.json", claude_plugin)
+if isinstance(claude_plugin, dict) and claude_plugin.get("name") != "cursor-subagent-models":
+    err(f"claude plugin.json name is {claude_plugin.get('name')!r}")
+openclaw = load_json("openclaw.plugin.json")
+same_version("openclaw.plugin.json", openclaw)
+pkg = load_json("package.json")
+same_version("package.json", pkg)
+
+if isinstance(pkg, dict):
+    if pkg.get("name") != "@ysskrishna/claude-code-subagents-for-cursor":
+        err(f"package.json name is {pkg.get('name')!r}")
+    oc = pkg.get("openclaw") or {}
+    if not (oc.get("compat") or {}).get("pluginApi") or not (oc.get("build") or {}).get("openclawVersion"):
+        err("package.json needs openclaw.compat.pluginApi and openclaw.build.openclawVersion")
+    else:
+        ok("package.json openclaw compat")
+
+claude_market = load_json(".claude-plugin/marketplace.json")
+if isinstance(claude_market, dict):
+    entry = (claude_market.get("plugins") or [{}])[0]
+    meta_ver = (claude_market.get("metadata") or {}).get("version")
+    name_ok = claude_market.get("name") == "cursor-subagent-models"
+    source_ok = entry.get("name") == "cursor-subagent-models" and entry.get("source") == "./"
+    version_ok = meta_ver == pver and entry.get("version") == pver
+    if not name_ok:
+        err(f"claude marketplace name is {claude_market.get('name')!r}")
+    if not version_ok:
+        err(f"claude marketplace version metadata {meta_ver!r} entry {entry.get('version')!r} differs from {pver!r}")
+    if not source_ok:
+        err("claude marketplace entry must use name cursor-subagent-models and source ./")
+    if name_ok and source_ok and version_ok:
+        ok("claude marketplace version and source")
+
+if isinstance(openclaw, dict):
+    id_ok = openclaw.get("id") == "claude-code-subagents-for-cursor"
+    skills_ok = openclaw.get("skills") == ["./skills"]
+    if not id_ok:
+        err(f"openclaw.plugin.json id is {openclaw.get('id')!r}")
+    if not skills_ok:
+        err(f"openclaw.plugin.json skills is {openclaw.get('skills')!r}")
+    if id_ok and skills_ok:
+        ok("openclaw.plugin.json id and skills")
+
 # 7. Required files, local links, install commands
 for f in ("README.md", "LICENSE", "CHANGELOG.md", "SECURITY.md"):
     if not os.path.isfile(f):

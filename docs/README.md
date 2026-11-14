@@ -10,6 +10,7 @@ The short version is in the [README](../README.md).
 | [install/skills-sh-setup.md](install/skills-sh-setup.md) | Install with `npx skills` |
 | [install/gh-cli-setup.md](install/gh-cli-setup.md) | Install with `gh skill` |
 | [install/manual-setup.md](install/manual-setup.md) | Copy the folder yourself |
+| [install/packages.md](install/packages.md) | Claude Code plugin, npm package, OpenClaw bundle |
 
 **Guides**
 

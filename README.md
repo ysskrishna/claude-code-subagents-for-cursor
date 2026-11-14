@@ -73,6 +73,21 @@ Copy the [`skills/use-claude-code-subagents`](skills/use-claude-code-subagents) 
 
 </details>
 
+<a id="other-registries"></a>
+
+<details>
+<summary><b>Claude Code, npm, and OpenClaw</b></summary>
+
+The same repo also has `.claude-plugin/plugin.json`, the npm package `@ysskrishna/claude-code-subagents-for-cursor`, and `openclaw.plugin.json`. These do not replace the Cursor install above. In Claude Code:
+
+```text
+/plugin install cursor-subagent-models --marketplace ysskrishna/claude-code-subagents-for-cursor
+```
+
+Details: [docs/install/packages.md](docs/install/packages.md).
+
+</details>
+
 ## Usage
 
 ```text
@@ -102,6 +117,7 @@ The Allowlist modes are not supported: they need an entry for every command. Bri
 | Guide | What is in it |
 |---|---|
 | [docs/README.md](docs/README.md) | Requirements, platforms, what is tested, when you do not need this |
+| [docs/install/packages.md](docs/install/packages.md) | Claude Code plugin, npm package, OpenClaw bundle |
 | [docs/guides/usage.md](docs/guides/usage.md) | Using the skill, verifying it, what to expect |
 | [docs/reference/how-it-works.md](docs/reference/how-it-works.md) | Agent lookup, model mapping, how the `claude` command is built |
 | [docs/guides/permissions.md](docs/guides/permissions.md) | Run without approval prompts: Cursor run modes, Claude Code settings |

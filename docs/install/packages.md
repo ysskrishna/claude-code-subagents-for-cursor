@@ -28,4 +28,6 @@ Claude Code can fetch a marketplace plugin from npm. This package is that artifa
 
 `openclaw.plugin.json` is the ClawHub bundle. The id is `claude-code-subagents-for-cursor`. The display name is Claude Code Subagents for Cursor, the same as `.cursor-plugin/plugin.json` `displayName`. `package.json` carries `openclaw.compat` and `openclaw.build.openclawVersion`, the same pins as `@ysskrishna/ai-agent-skills`. This repo has not been run against an OpenClaw gateway.
 
-ClawHub rejects an upload of the whole repo, because that contains more than one bundle manifest, and it rejects a tarball that only has `openclaw.plugin.json`. `scripts/publish_clawhub.py` stages one host manifest (`.cursor-plugin/plugin.json`) plus `openclaw.plugin.json`. The script's default is a dry run. CI does not run it.
+ClawHub shows `assets/icon.png` as the plugin image. An icon URL in the manifest is ignored. The category in `openclaw.plugin.json` is `developer-tools`. Topics are not a manifest field. `scripts/publish_clawhub.py` passes them on publish: `cursor`, `subagents`, `claude-code`, `model-routing`, `byok`.
+
+ClawHub rejects an upload of the whole repo, because that contains more than one bundle manifest, and it rejects a tarball that only has `openclaw.plugin.json`. The script stages one host manifest (`.cursor-plugin/plugin.json`) plus `openclaw.plugin.json`, including `assets/icon.png`. The script's default is a dry run. CI does not run it.

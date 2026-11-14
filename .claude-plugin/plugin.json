@@ -9,6 +9,7 @@
   "homepage": "https://github.com/ysskrishna/claude-code-subagents-for-cursor",
   "repository": "https://github.com/ysskrishna/claude-code-subagents-for-cursor",
   "license": "MIT",
+  "icon": "./assets/icon.png",
   "keywords": [
     "cursor",
     "claude-code",

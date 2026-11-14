@@ -20,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_NAME = "@ysskrishna/claude-code-subagents-for-cursor"
 SOURCE_REPO = "ysskrishna/claude-code-subagents-for-cursor"
+TOPICS = "cursor,subagents,claude-code,model-routing,byok"
 OWNER = "ysskrishna"
 
 STAGE_FILES = (
@@ -115,6 +116,8 @@ def publish_cmd(ver: str, source: Path, dry_run: bool) -> list[str]:
         changelog(ver),
         "--tags",
         "latest",
+        "--topics",
+        TOPICS,
         *(["--dry-run"] if dry_run else []),
     ]
 

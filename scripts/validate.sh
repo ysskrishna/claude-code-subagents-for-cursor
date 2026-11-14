@@ -232,6 +232,17 @@ elif isinstance(openclaw, dict) and openclaw.get("name") != display:
 elif isinstance(openclaw, dict):
     ok("display name Claude Code Subagents for Cursor")
 
+if not os.path.isfile("assets/icon.png"):
+    err("assets/icon.png is missing; ClawHub uses that file as the plugin image")
+else:
+    ok("assets/icon.png")
+if isinstance(claude_plugin, dict) and claude_plugin.get("icon") != "./assets/icon.png":
+    err(f"claude plugin.json icon is {claude_plugin.get('icon')!r}")
+if isinstance(openclaw, dict) and openclaw.get("categories") != ["developer-tools"]:
+    err(f"openclaw.plugin.json categories is {openclaw.get('categories')!r}")
+elif isinstance(openclaw, dict):
+    ok("openclaw category developer-tools")
+
 if isinstance(openclaw, dict):
     id_ok = openclaw.get("id") == "claude-code-subagents-for-cursor"
     skills_ok = openclaw.get("skills") == ["./skills"]

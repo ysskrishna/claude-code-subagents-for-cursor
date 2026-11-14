@@ -15,7 +15,7 @@ evals/               trigger queries for the skill (see evals/README.md)
 docs/                install/ guides/ reference/ contributing/ (see docs/README.md)
 examples/            a small project with two custom subagents to try the skill on
 schemas/             Cursor's plugin schemas, vendored; do not hand-edit
-scripts/             validate.sh, check_claude_flags.sh, test_installs.sh
+scripts/             validate.sh, check_claude_flags.sh, test_installs.sh, publish_clawhub.py
 SECURITY.md  CHANGELOG.md  README.md
 workspace/           local scratch, gitignored
 ```
@@ -61,11 +61,12 @@ When a flag or behavior of `claude` matters, test it with a real run before writ
 
 What is **already published** lives in [docs/contributing/release-state.md](docs/contributing/release-state.md). When the owner asks to ship a release, follow [docs/contributing/development.md](docs/contributing/development.md#releases) and:
 
-1. Confirm bumped version agrees in `.cursor-plugin/plugin.json`, `skills/use-claude-code-subagents/SKILL.md`, and the top `CHANGELOG.md` section (with footer compare link).
+1. Confirm bumped version agrees in `.cursor-plugin/plugin.json`, `skills/use-claude-code-subagents/SKILL.md`, and the top `CHANGELOG.md` section (with footer compare link). `validate.sh` also checks `.claude-plugin/`, `openclaw.plugin.json`, and `package.json`.
 2. Ensure changes are on `main` (`git pull origin main`).
 3. Run `bash scripts/validate.sh`, `bash scripts/check_claude_flags.sh`, and `bash scripts/test_installs.sh all` on `main`.
-4. Create an annotated tag `vX.Y.Z` on `main` and `git push origin vX.Y.Z`. Tag must match `plugin.json`; [`.github/workflows/release.yml`](.github/workflows/release.yml) creates the GitHub Release.
-5. Confirm the release at https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases, then update `docs/contributing/release-state.md` (version, tag, `main` commit, release URL).
+4. Create an annotated tag `vX.Y.Z` on `main` and `git push origin vX.Y.Z`. Tag must match `plugin.json`. [`.github/workflows/release.yml`](.github/workflows/release.yml) creates the GitHub Release. The same tag runs [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml), which publishes the npm package.
+5. From that same tagged commit, publish the same version to ClawHub: `python3 scripts/publish_clawhub.py --publish`. `clawhub` must already be logged in. The script reads the version and the display name from `package.json` and `openclaw.plugin.json`. Do not publish a different version than the tag.
+6. Confirm the GitHub Release, the npm version, and the ClawHub version, then update `docs/contributing/release-state.md` (version, tag, `main` commit, release URL).
 
 Do not create tags or GitHub releases unless the owner asks.
 

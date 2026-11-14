@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2026-11-14
+
+The product name on Cursor and ClawHub is Claude Code Subagents for Cursor. A version tag also publishes the npm package.
+
+### Changed
+
+- **Display name.** `.cursor-plugin/plugin.json` `displayName` and `openclaw.plugin.json` `name` are **Claude Code Subagents for Cursor**. The npm package stays `@ysskrishna/claude-code-subagents-for-cursor`. The OpenClaw id stays `claude-code-subagents-for-cursor`.
+- **Claude Code plugin id stays `cursor-subagent-models`.** `claude plugin validate` rejects `claude-code-subagents-for-cursor` because a third-party plugin name cannot start with `claude-`. That id is only the Claude Code install name. It is not the package name.
+
+### Added
+
+- **npm trusted publishing.** Pushing a `v*` tag runs [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml), separate from the GitHub Release workflow. It publishes `@ysskrishna/claude-code-subagents-for-cursor` with GitHub's OIDC token. No npm token is stored in the repo. The package's trusted publisher on npmjs.com has to name `publish-npm.yml` and the `prod` environment before the first successful publish.
+- **Plugin image.** `assets/icon.png` is the 1024 square logo. ClawHub uses that filename and ignores an icon URL. `.claude-plugin/plugin.json` points at the same file.
+- **ClawHub topics.** `scripts/publish_clawhub.py` sends `cursor`, `subagents`, `claude-code`, `model-routing`, and `byok`. The manifest category is `developer-tools`.
+
 ## [1.3.1] - 2026-11-14
 
 The same skill can now be loaded as a Claude Code plugin, an npm package, and an OpenClaw bundle. Cursor install routes are unchanged.
@@ -96,6 +111,7 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.3.2]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.1.0...v1.2.0

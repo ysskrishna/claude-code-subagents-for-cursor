@@ -1,8 +1,9 @@
 # Create a GitHub Release when you push a version tag (e.g. v1.0.0).
+# npm publish is a separate workflow: publish-npm.yml.
 #
 # Release body (in order):
-# 1. Annotated tag message — use: git tag -a v1.2.3 -m "Title" -m "Longer notes..."
-# 2. Else the matching ## [x.y.z] section in CHANGELOG.md (tag v1.2.3 → version 1.2.3)
+# 1. Annotated tag message. Use: git tag -a v1.2.3 -m "Title" -m "Longer notes..."
+# 2. Else the matching ## [x.y.z] section in CHANGELOG.md (tag v1.2.3, version 1.2.3)
 # 3. Else GitHub-generated notes from commits
 name: Release
 

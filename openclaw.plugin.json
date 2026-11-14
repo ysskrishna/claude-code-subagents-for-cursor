@@ -1,9 +1,10 @@
 {
   "id": "claude-code-subagents-for-cursor",
-  "name": "Claude Code Subagents",
+  "name": "Claude Code Subagents for Cursor",
   "description": "Run Cursor's custom subagents on the model in each agent file via Claude Code. Works around Cursor pinning custom subagents to the parent model.",
-  "version": "1.3.1",
-  "icon": "https://raw.githubusercontent.com/ysskrishna/claude-code-subagents-for-cursor/main/assets/logo.png",
+  "version": "1.3.2",
+  "categories": ["developer-tools"],
+  "icon": "./assets/icon.png",
   "skills": [
     "./skills"
   ]

@@ -34,8 +34,26 @@ Then run **Developer: Reload Window** in Cursor and start a new chat. Run the sc
 1. Bump `version` in `.cursor-plugin/plugin.json`. Set the same value on `metadata.version` in `skills/use-claude-code-subagents/SKILL.md`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `openclaw.plugin.json`, and `package.json`. `validate.sh` checks them.
 2. Add a `## [X.Y.Z]` section to `CHANGELOG.md` and a footer link.
 3. Run the three scripts.
-4. Merge, then push an annotated tag `vX.Y.Z`. `.github/workflows/release.yml` checks the tag against `plugin.json` and creates the GitHub Release.
-5. Update [release-state.md](release-state.md) with the shipped version, tag, `main` commit, and release URL.
+4. Merge, then push an annotated tag `vX.Y.Z`. [`.github/workflows/release.yml`](../../.github/workflows/release.yml) checks the tag against `plugin.json` and creates the GitHub Release. The same tag runs [`.github/workflows/publish-npm.yml`](../../.github/workflows/publish-npm.yml), which publishes `@ysskrishna/claude-code-subagents-for-cursor` with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/). That workflow uses GitHub's OIDC token (`id-token: write`) in the `prod` environment. It does not use an npm token. npm CLI there is upgraded to latest, which must be 11.5.1 or newer, on Node 22.
+5. On that tagged commit, publish the same version to ClawHub:
+
+   ```bash
+   python3 scripts/publish_clawhub.py --publish
+   ```
+
+   `clawhub` must already be logged in. The script's default, without `--publish`, only prints the command. It stages one host manifest (`.cursor-plugin/plugin.json`) plus `openclaw.plugin.json`. Uploading the whole repo fails, because ClawHub allows one bundle manifest.
+6. Confirm the GitHub Release, the npm version, and the ClawHub version. Update [release-state.md](release-state.md) with the shipped version, tag, `main` commit, and release URL.
+
+npmjs.com has to trust this repo before the workflow can publish. The package settings page does not exist until the package does, so the first publish is still one local `npm publish --access public` (an authenticator code if npm asks). Then, on npmjs.com, open the package, **Settings, Trusted publishing**, and add GitHub Actions:
+
+| Field | Value |
+| --- | --- |
+| Organization or user | `ysskrishna` |
+| Repository | `claude-code-subagents-for-cursor` |
+| Workflow filename | `publish-npm.yml` |
+| Environment name | `prod` |
+
+Allow `npm publish`. The filename must match, including `.yml`. A new trusted-publisher row has to publish successfully within 2 days or it expires. Later tags publish with no token and no one-time code. Provenance is added automatically. The GitHub Environment is `prod`, same as `ai-agent-skills`, with no extra approval rule.
 
 ## Facts with one home
 

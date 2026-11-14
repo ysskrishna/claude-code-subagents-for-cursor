@@ -224,6 +224,14 @@ if isinstance(claude_market, dict):
     if name_ok and source_ok and version_ok:
         ok("claude marketplace version and source")
 
+display = plugin.get("displayName")
+if display != "Claude Code Subagents for Cursor":
+    err(f"plugin.json displayName is {display!r}")
+elif isinstance(openclaw, dict) and openclaw.get("name") != display:
+    err(f"openclaw.plugin.json name {openclaw.get('name')!r} differs from plugin.json displayName")
+elif isinstance(openclaw, dict):
+    ok("display name Claude Code Subagents for Cursor")
+
 if isinstance(openclaw, dict):
     id_ok = openclaw.get("id") == "claude-code-subagents-for-cursor"
     skills_ok = openclaw.get("skills") == ["./skills"]

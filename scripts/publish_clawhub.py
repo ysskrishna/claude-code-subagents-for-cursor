@@ -19,7 +19,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_NAME = "@ysskrishna/claude-code-subagents-for-cursor"
-DISPLAY_NAME = "Claude Code Subagents"
 SOURCE_REPO = "ysskrishna/claude-code-subagents-for-cursor"
 OWNER = "ysskrishna"
 
@@ -36,6 +35,14 @@ STAGE_TREES = ("skills", "assets")
 def version() -> str:
     data = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
     return data["version"]
+
+
+def display_name() -> str:
+    data = json.loads((ROOT / "openclaw.plugin.json").read_text(encoding="utf-8"))
+    name = data.get("name")
+    if not name:
+        raise SystemExit("openclaw.plugin.json name is missing")
+    return name
 
 
 def changelog(ver: str) -> str:
@@ -101,7 +108,7 @@ def publish_cmd(ver: str, source: Path, dry_run: bool) -> list[str]:
         "--name",
         PACKAGE_NAME,
         "--display-name",
-        DISPLAY_NAME,
+        display_name(),
         "--version",
         ver,
         "--changelog",

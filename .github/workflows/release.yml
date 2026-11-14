@@ -1,9 +1,15 @@
-# Create a GitHub Release when you push a version tag (e.g. v1.0.0).
+# Create a GitHub Release when you push a version tag (e.g. v1.0.0),
+# then publish that version to npm with trusted publishing (OIDC, no npm token).
 #
 # Release body (in order):
-# 1. Annotated tag message — use: git tag -a v1.2.3 -m "Title" -m "Longer notes..."
-# 2. Else the matching ## [x.y.z] section in CHANGELOG.md (tag v1.2.3 → version 1.2.3)
+# 1. Annotated tag message. Use: git tag -a v1.2.3 -m "Title" -m "Longer notes..."
+# 2. Else the matching ## [x.y.z] section in CHANGELOG.md (tag v1.2.3, version 1.2.3)
 # 3. Else GitHub-generated notes from commits
+#
+# npmjs.com trusted publisher for this package:
+#   user ysskrishna, repo claude-code-subagents-for-cursor, workflow release.yml
+#   environment name empty, allow npm publish
+# The package has to exist before that setting can be saved. See docs/contributing/development.md.
 name: Release
 
 on:
@@ -76,3 +82,53 @@ jobs:
           else
             gh release create "$TAG" --title "$TITLE" --verify-tag --generate-notes
           fi
+
+  publish-npm:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check tag matches package.json version
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="$(python3 -c "import json; print(json.load(open('package.json'))['version'])")"
+          if [ "${TAG#v}" != "$VERSION" ]; then
+            echo "Tag $TAG does not match package.json version $VERSION" >&2
+            exit 1
+          fi
+
+      - name: Validate
+        run: bash scripts/validate.sh
+
+      - name: Use Node.js for publish
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest
+
+      - name: Skip publish if this version is already on npm
+        id: npm_exists
+        run: |
+          set -euo pipefail
+          VERSION="$(node -p "require('./package.json').version")"
+          if npm view "@ysskrishna/claude-code-subagents-for-cursor@${VERSION}" version 2>/dev/null; then
+            echo "skip_publish=true" >> "$GITHUB_OUTPUT"
+            echo "Version ${VERSION} is already on npm; skipping publish."
+          else
+            echo "skip_publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish package
+        if: steps.npm_exists.outputs.skip_publish != 'true'
+        run: npm publish --access public

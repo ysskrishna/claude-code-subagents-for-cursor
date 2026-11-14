@@ -16,7 +16,7 @@ The product name on Cursor and ClawHub is Claude Code Subagents for Cursor. A ve
 
 ### Added
 
-- **npm trusted publishing.** Pushing a `v*` tag runs [`.github/workflows/release.yml`](.github/workflows/release.yml), which creates the GitHub Release and publishes `@ysskrishna/claude-code-subagents-for-cursor` with GitHub's OIDC token. No npm token is stored in the repo. The package's trusted publisher on npmjs.com has to name this workflow before the first successful publish.
+- **npm trusted publishing.** Pushing a `v*` tag runs [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml), separate from the GitHub Release workflow. It publishes `@ysskrishna/claude-code-subagents-for-cursor` with GitHub's OIDC token. No npm token is stored in the repo. The package's trusted publisher on npmjs.com has to name `publish-npm.yml` and the `prod` environment before the first successful publish.
 
 ## [1.3.1] - 2026-11-14
 

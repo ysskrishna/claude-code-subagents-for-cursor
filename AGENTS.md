@@ -64,7 +64,7 @@ What is **already published** lives in [docs/contributing/release-state.md](docs
 1. Confirm bumped version agrees in `.cursor-plugin/plugin.json`, `skills/use-claude-code-subagents/SKILL.md`, and the top `CHANGELOG.md` section (with footer compare link). `validate.sh` also checks `.claude-plugin/`, `openclaw.plugin.json`, and `package.json`.
 2. Ensure changes are on `main` (`git pull origin main`).
 3. Run `bash scripts/validate.sh`, `bash scripts/check_claude_flags.sh`, and `bash scripts/test_installs.sh all` on `main`.
-4. Create an annotated tag `vX.Y.Z` on `main` and `git push origin vX.Y.Z`. Tag must match `plugin.json`. [`.github/workflows/release.yml`](.github/workflows/release.yml) creates the GitHub Release and publishes the npm package for that version.
+4. Create an annotated tag `vX.Y.Z` on `main` and `git push origin vX.Y.Z`. Tag must match `plugin.json`. [`.github/workflows/release.yml`](.github/workflows/release.yml) creates the GitHub Release. The same tag runs [`.github/workflows/publish-npm.yml`](.github/workflows/publish-npm.yml), which publishes the npm package.
 5. From that same tagged commit, publish the same version to ClawHub: `python3 scripts/publish_clawhub.py --publish`. `clawhub` must already be logged in. The script reads the version and the display name from `package.json` and `openclaw.plugin.json`. Do not publish a different version than the tag.
 6. Confirm the GitHub Release, the npm version, and the ClawHub version, then update `docs/contributing/release-state.md` (version, tag, `main` commit, release URL).
 

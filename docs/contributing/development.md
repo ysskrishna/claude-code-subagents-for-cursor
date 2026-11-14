@@ -34,7 +34,7 @@ Then run **Developer: Reload Window** in Cursor and start a new chat. Run the sc
 1. Bump `version` in `.cursor-plugin/plugin.json`. Set the same value on `metadata.version` in `skills/use-claude-code-subagents/SKILL.md`, `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `openclaw.plugin.json`, and `package.json`. `validate.sh` checks them.
 2. Add a `## [X.Y.Z]` section to `CHANGELOG.md` and a footer link.
 3. Run the three scripts.
-4. Merge, then push an annotated tag `vX.Y.Z`. [`.github/workflows/release.yml`](../../.github/workflows/release.yml) checks the tag against `plugin.json`, creates the GitHub Release, and publishes `@ysskrishna/claude-code-subagents-for-cursor` with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/). The workflow uses GitHub's OIDC token (`id-token: write`). It does not use an npm token. npm CLI in that job is upgraded to latest, which must be 11.5.1 or newer, on Node 22.
+4. Merge, then push an annotated tag `vX.Y.Z`. [`.github/workflows/release.yml`](../../.github/workflows/release.yml) checks the tag against `plugin.json` and creates the GitHub Release. The same tag runs [`.github/workflows/publish-npm.yml`](../../.github/workflows/publish-npm.yml), which publishes `@ysskrishna/claude-code-subagents-for-cursor` with [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/). That workflow uses GitHub's OIDC token (`id-token: write`) in the `prod` environment. It does not use an npm token. npm CLI there is upgraded to latest, which must be 11.5.1 or newer, on Node 22.
 5. On that tagged commit, publish the same version to ClawHub:
 
    ```bash
@@ -50,10 +50,10 @@ npmjs.com has to trust this repo before the workflow can publish. The package se
 | --- | --- |
 | Organization or user | `ysskrishna` |
 | Repository | `claude-code-subagents-for-cursor` |
-| Workflow filename | `release.yml` |
-| Environment name | leave empty |
+| Workflow filename | `publish-npm.yml` |
+| Environment name | `prod` |
 
-Allow `npm publish`. The filename must match, including `.yml`. A new trusted-publisher row has to publish successfully within 2 days or it expires. Later tags publish with no token and no one-time code. Provenance is added automatically. This repo has no GitHub Environment named `prod`, so the workflow does not set one.
+Allow `npm publish`. The filename must match, including `.yml`. A new trusted-publisher row has to publish successfully within 2 days or it expires. Later tags publish with no token and no one-time code. Provenance is added automatically. The GitHub Environment is `prod`, same as `ai-agent-skills`, with no extra approval rule.
 
 ## Facts with one home
 

@@ -74,7 +74,6 @@ Do not create tags or GitHub releases unless the owner asks.
 
 - Short imperative subject that says what changed and why.
 - No `Co-Authored-By` line and no "Generated with" line.
-- Do not create branches, tags or releases without the owner asking.
 
 ## Security
 

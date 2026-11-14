@@ -28,7 +28,7 @@ Claude Code can fetch a marketplace plugin from npm. This package is that artifa
 
 `openclaw.plugin.json` is the ClawHub bundle. The id is `claude-code-subagents-for-cursor`. The display name is Claude Code Subagents for Cursor, the same as `.cursor-plugin/plugin.json` `displayName`. `package.json` carries `openclaw.compat` and `openclaw.build.openclawVersion`, the same pins as `@ysskrishna/ai-agent-skills`. This repo has not been run against an OpenClaw gateway.
 
-ClawHub shows `assets/icon.png` as the plugin image. An icon URL in the manifest is ignored. The category in `openclaw.plugin.json` is `developer-tools`. Topics are not a manifest field. `scripts/publish_clawhub.py` passes them on skill and package publish: `cursor`, `subagents`, `claude-code`, `model-routing`, `byok`.
+ClawHub shows `assets/icon.png` as the plugin image. An icon URL in the manifest is ignored. The category in `openclaw.plugin.json` is `developer-tools`. Topics and categories are not manifest fields. `scripts/publish_clawhub.py` passes category `developer-tools` and topics `cursor`, `subagents`, `claude-code`, `model-routing`, `byok` on skill and package publish (clawhub CLI ≥ 0.26.0).
 
 Install the skill alone with ClawHub, for example `clawhub install use-claude-code-subagents` (after `python3 scripts/publish_clawhub.py publish`). The OpenClaw bundle is `@ysskrishna/claude-code-subagents-for-cursor` via `package publish`. Maintainer sync: `plan` / `publish` for the skill, `package plan` / `package publish` for the bundle.
 

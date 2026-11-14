@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3] - 2026-11-14
+
+ClawHub skill listings pick up category and topics; the publish script syncs the skill and bundle separately.
+
+### Changed
+
+- **ClawHub skill publish.** `scripts/publish_clawhub.py` adds `plan` / `publish` for `use-claude-code-subagents`, passes category `developer-tools` and topics on skill upload, and keeps the staged bundle path for the OpenClaw package. `validate.sh` checks `clawhub_slug_map` and `SKILL_CATEGORIES`.
+
 ## [1.3.2] - 2026-11-14
 
 The product name on Cursor and ClawHub is Claude Code Subagents for Cursor. A version tag also publishes the npm package.
@@ -111,6 +119,7 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.3.3]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.2.0...v1.3.0

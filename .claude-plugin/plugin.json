@@ -1,7 +1,7 @@
 {
   "name": "cursor-subagent-models",
   "description": "Run Cursor's custom subagents on the model in each agent file via Claude Code. Works around Cursor pinning custom subagents to the parent model.",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "author": {
     "name": "ysskrishna",
     "url": "https://ysskrishna.space"

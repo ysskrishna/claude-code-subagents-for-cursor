@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-11-14
+
+The same skill can now be loaded as a Claude Code plugin, an npm package, and an OpenClaw bundle. Cursor install routes are unchanged.
+
+### Added
+
+- **Claude Code plugin.** `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` name it `cursor-subagent-models` (one entry, `source` `./`). Claude Code rejects a third-party name that starts with `claude-` or reads as Anthropic's own, so this is not the Cursor plugin name. Cursor still reads `.cursor-plugin/`. The skill id stays `use-claude-code-subagents`. buildwithclaude closed the earlier listing because only the Cursor manifest existed.
+- **npm package** `@ysskrishna/claude-code-subagents-for-cursor`. Claude Code can fetch a marketplace plugin from npm. The package is not a Cursor install, and npm downloads are not Cursor Directory views.
+- **OpenClaw bundle.** `openclaw.plugin.json`, plus `openclaw.compat` in `package.json` (same pins as `@ysskrishna/ai-agent-skills`). `scripts/publish_clawhub.py` stages one host manifest for ClawHub. Nothing is published from CI.
+
 ## [1.3.0] - 2026-11-12
 
 Briefs stay out of your repo, two supported run modes, a tidier `docs/` folder, and an example project.
@@ -86,6 +96,7 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.3.1]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.0.0...v1.1.0

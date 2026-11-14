@@ -74,6 +74,9 @@ if logo and not os.path.isfile(logo):
 
 # 3. Skills: Agent Skills limits, companion files, evals
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
+pub_script = read("scripts/publish_clawhub.py")
+slug_block = re.search(r"clawhub_slug_map\s*=\s*\{(.*?)\}", pub_script, re.S)
+slug_map = dict(re.findall(r'"([^"]+)":\s*"([^"]+)"', slug_block.group(1))) if slug_block else {}
 skill_text = ""
 for path in sorted(glob.glob("skills/*/SKILL.md")):
     skill_dir = os.path.dirname(path)
@@ -125,6 +128,8 @@ for path in sorted(glob.glob("skills/*/SKILL.md")):
             in_meta = False
     if version != plugin.get("version"):
         err(f"{path}: metadata.version {version!r} must equal plugin.json version {plugin.get('version')!r}")
+    if dirname not in slug_map:
+        err(f"{dirname}: missing from clawhub_slug_map in scripts/publish_clawhub.py")
 
     if not os.path.isfile(os.path.join(skill_dir, "references", "example.md")):
         err(f"{skill_dir}: references/example.md is required")

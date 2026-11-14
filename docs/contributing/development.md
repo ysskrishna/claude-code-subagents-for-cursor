@@ -38,10 +38,11 @@ Then run **Developer: Reload Window** in Cursor and start a new chat. Run the sc
 5. On that tagged commit, publish the same version to ClawHub:
 
    ```bash
-   python3 scripts/publish_clawhub.py --publish
+   python3 scripts/publish_clawhub.py publish
+   python3 scripts/publish_clawhub.py package publish
    ```
 
-   `clawhub` must already be logged in. The script's default, without `--publish`, only prints the command. It stages one host manifest (`.cursor-plugin/plugin.json`) plus `openclaw.plugin.json`. Uploading the whole repo fails, because ClawHub allows one bundle manifest.
+   `clawhub` must already be logged in. Check sync first with `plan` and `package plan`. The legacy `python3 scripts/publish_clawhub.py --publish` still runs only the bundle upload. Per-skill publish uses `clawhub skill publish` on `skills/use-claude-code-subagents/`. The bundle stages one host manifest (`.cursor-plugin/plugin.json`) plus `openclaw.plugin.json`. Uploading the whole repo fails, because ClawHub allows one bundle manifest.
 6. Confirm the GitHub Release, the npm version, and the ClawHub version. Update [release-state.md](release-state.md) with the shipped version, tag, `main` commit, and release URL.
 
 npmjs.com has to trust this repo before the workflow can publish. The package settings page does not exist until the package does, so the first publish is still one local `npm publish --access public` (an authenticator code if npm asks). Then, on npmjs.com, open the package, **Settings, Trusted publishing**, and add GitHub Actions:

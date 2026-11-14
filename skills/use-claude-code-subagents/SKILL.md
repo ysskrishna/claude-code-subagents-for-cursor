@@ -5,7 +5,7 @@ description: >
 license: MIT
 metadata:
   author: ysskrishna
-  version: "1.3.3"
+  version: "1.3.4"
 ---
 
 # Use Claude Code subagents

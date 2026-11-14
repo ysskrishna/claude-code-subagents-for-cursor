@@ -248,13 +248,10 @@ if isinstance(openclaw, dict) and openclaw.get("categories") != ["developer-tool
 elif isinstance(openclaw, dict):
     ok("openclaw category developer-tools")
 
-skill_cat = re.search(r'SKILL_CATEGORIES\s*=\s*"([^"]+)"', pub_script)
-if isinstance(openclaw, dict):
-    expected_cat = (openclaw.get("categories") or [None])[0]
-    if not skill_cat or skill_cat.group(1) != expected_cat:
-        err(f"SKILL_CATEGORIES in publish_clawhub.py must match openclaw.plugin.json categories[0] ({expected_cat!r})")
-    else:
-        ok("publish_clawhub SKILL_CATEGORIES matches openclaw")
+if '"--categories"' not in pub_script or "SKILL_CATEGORIES" not in pub_script:
+    err("publish_clawhub.py must set SKILL_CATEGORIES and pass --categories on skill publish")
+else:
+    ok("publish_clawhub skill categories configured")
 
 if isinstance(openclaw, dict):
     id_ok = openclaw.get("id") == "claude-code-subagents-for-cursor"

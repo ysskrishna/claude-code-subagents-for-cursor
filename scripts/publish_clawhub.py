@@ -38,8 +38,8 @@ OWNER_HANDLE = "ysskrishna"
 PACKAGE_NAME = "@ysskrishna/claude-code-subagents-for-cursor"
 SOURCE_REPO = "ysskrishna/claude-code-subagents-for-cursor"
 PACKAGE_TOPICS = "cursor,subagents,claude-code,model-routing,byok"
-# Matches openclaw.plugin.json categories for per-skill publish.
-SKILL_CATEGORIES = "developer-tools"
+# ClawHub skill browse slugs (not openclaw.plugin.json bundle categories).
+SKILL_CATEGORIES = "development,agents"
 REGISTRY_URL = "https://clawhub.ai"
 RATE_LIMIT_RETRIES = 5
 

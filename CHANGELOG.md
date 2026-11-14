@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.4] - 2026-11-14
+
+### Fixed
+
+- **ClawHub skill categories.** Skill publish uses browse slugs `development` and `agents`, not bundle category `developer-tools`, which ClawHub rejects on `skill publish`.
+
 ## [1.3.3] - 2026-11-14
 
 ClawHub skill listings pick up category and topics; the publish script syncs the skill and bundle separately.
@@ -119,6 +125,7 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.3.4]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.0...v1.3.1

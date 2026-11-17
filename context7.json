@@ -1,0 +1,33 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Claude Code Subagents for Cursor",
+  "description": "Cursor agent skill (use-claude-code-subagents) that runs your custom subagents through the Claude Code CLI, so each subagent runs on the model named in its own agent file instead of the parent model. Includes install, usage, permissions and troubleshooting guides.",
+  "excludeFolders": [
+    "archive",
+    "archived",
+    "old",
+    "deprecated",
+    "legacy",
+    "tests",
+    ".github",
+    "assets",
+    "evals",
+    "scripts",
+    "schemas",
+    "docs/contributing"
+  ],
+  "excludeFiles": [
+    "CHANGELOG.md",
+    "changelog.md",
+    "LICENSE.md",
+    "license.md",
+    "CODE_OF_CONDUCT.md",
+    "NEWS.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "AGENTS.md"
+  ],
+  "rules": [
+    "Needs Cursor desktop running locally (Cloud Agents have no claude CLI), Claude Code installed and signed in, and a POSIX shell on macOS or Linux. Runs bill the Claude Code account."
+  ]
+}

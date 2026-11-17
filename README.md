@@ -2,6 +2,8 @@
 
 <img src="assets/logo-lockup.png" alt="Claude Code Subagents for Cursor" width="520">
 
+[![npm version](https://img.shields.io/npm/v/@ysskrishna/claude-code-subagents-for-cursor)](https://www.npmjs.com/package/@ysskrishna/claude-code-subagents-for-cursor)
+[![npm downloads](https://img.shields.io/npm/dm/@ysskrishna/claude-code-subagents-for-cursor)](https://www.npmjs.com/package/@ysskrishna/claude-code-subagents-for-cursor)
 [![Validate](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/validate.yml/badge.svg)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/validate.yml) [![Test installs](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/test-installs.yml/badge.svg)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/actions/workflows/test-installs.yml) [![License: MIT](https://img.shields.io/github/license/ysskrishna/claude-code-subagents-for-cursor)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/LICENSE) [![GitHub release](https://img.shields.io/github/v/release/ysskrishna/claude-code-subagents-for-cursor?label=release)](https://github.com/ysskrishna/claude-code-subagents-for-cursor/releases) [![Author site](https://img.shields.io/badge/author-ysskrishna.space-informational)](https://ysskrishna.space) [![Context7](https://img.shields.io/badge/Context7-docs-18181B)](https://context7.com/ysskrishna/claude-code-subagents-for-cursor) [![Ask DeepWiki](https://img.shields.io/badge/DeepWiki-ask-18181B)](https://deepwiki.com/ysskrishna/claude-code-subagents-for-cursor)
 
 [![skills.sh](https://skills.sh/b/ysskrishna/claude-code-subagents-for-cursor)](https://skills.sh/ysskrishna/claude-code-subagents-for-cursor) [![Cursor Directory](https://img.shields.io/badge/Cursor%20Directory-listed-blue)](https://cursor.directory/plugins/claude-code-subagents-for-cursor)
@@ -135,23 +137,22 @@ Claude Code Subagents for Cursor is built and maintained by:
 |---|------|--------|------|
 | <img src="https://github.com/ysskrishna.png?size=120" width="60" height="60" alt="Y. Siva Sai Krishna"> | **Y. Siva Sai Krishna** | [@ysskrishna](https://github.com/ysskrishna) | Creator |
 
-
 ## Changelog
 
-See [CHANGELOG](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/CHANGELOG.md) for release history.
+See [CHANGELOG](CHANGELOG.md) for release history.
 
 ## Support
 
-If you find this library helpful:
+If you find this project helpful:
 
 - ⭐ Star the repository
-- 🐛 Report issues
+- 🐛 [Report issues](https://github.com/ysskrishna/claude-code-subagents-for-cursor/issues)
 - 🔀 Submit pull requests
 - 💝 [Sponsor on GitHub](https://github.com/sponsors/ysskrishna)
 
 ## License
 
-MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](https://github.com/ysskrishna/claude-code-subagents-for-cursor/blob/main/LICENSE) for details.
+MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](LICENSE) for details.
 
 ---
 
@@ -159,5 +160,6 @@ MIT © [Y. Siva Sai Krishna](https://github.com/ysskrishna) — see [LICENSE](ht
   <a href="https://github.com/ysskrishna">Author's GitHub</a> •
   <a href="https://linkedin.com/in/ysskrishna">Author's LinkedIn</a> •
   <a href="https://ysskrishna.space">Author's site</a> •
+  <a href="https://www.npmjs.com/package/@ysskrishna/claude-code-subagents-for-cursor">npm package</a> •
   <a href="https://github.com/ysskrishna/claude-code-subagents-for-cursor/issues">Report Issues</a>
 </p>

@@ -42,7 +42,11 @@ scout ran on claude-haiku-5-5 | claude-haiku-5-5: 1368 in / 10 out, $0.0003 | to
 scout ran on claude-haiku-5-5 | claude-haiku-5-5: 1368 in / 10 out, $0.0001 | total $0.0001 (Claude Code client-side estimate)
 ```
 
-This confirms `--effort high` is accepted with `--agent` and the receipt parses live output. A trivial prompt does not establish an effect on reasoning; low effort and resumed effort were not tested live. See the documentation's verification table for the CLI version used.
+This confirms `--effort high` is accepted with `--agent` and the receipt parses live output. A trivial prompt does not establish an effect on reasoning.
+
+**Cursor UI check:** an Agent chat read a project-local copy of this skill (renamed only for test isolation) and routed three custom agents whose model IDs ended in `-high`, `-low`, and no suffix. The terminal commands passed the base model ID, with `--effort high`, `--effort low`, and no effort flag respectively. All returned `UI_OK` on `claude-haiku-5-5`, with no permission denials. Saved JSON token counts matched the independent Claude session transcripts, and the receipt formatter parsed all three payloads.
+
+The first plain command hit a 401 from an inherited invalid `ANTHROPIC_API_KEY`. Successful invocations used the explicitly authorized test exception `env -u ANTHROPIC_API_KEY` to use the existing Claude login; the plain-command flow remains blocked in that local environment until its authentication setup is corrected. Resumed effort was not tested live. See the documentation's verification table for the versions used.
 
 **Cursor and Claude Code resolve aliases differently.** Cursor maps `haiku` to `claude-haiku-4-5` (often disabled on a plan) and `sonnet` to a Sonnet 4.x model. Claude Code maps them to its latest, so an agent with `model: haiku` runs on a newer model through this skill than it would in Cursor. This is intended. The Cursor models `claude-haiku-5-5` and `claude-sonnet-5-5` have no Cursor alias, so agents that name them need the full ID.
 

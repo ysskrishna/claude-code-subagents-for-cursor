@@ -41,10 +41,10 @@ need() {
   return 1
 }
 
-# check_installed <route> <dir>: SKILL.md and both reference files must be there, evals must not.
+# check_installed <route> <dir>: the skill, references and helpers must be there, evals must not.
 check_installed() {
   local route="$1" dir="$2" missing=""
-  for f in SKILL.md references/example.md references/model-mapping.md; do
+  for f in SKILL.md references/example.md references/model-mapping.md scripts/effort_map.py scripts/receipt.py scripts/test_effort_receipt.py; do
     [ -f "$dir/$f" ] || missing="$missing $f"
   done
   if [ -n "$missing" ]; then fail "$route" "missing in $dir:$missing"; return; fi

@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 command -v python3 >/dev/null 2>&1 || { echo "FAIL python3 is required"; exit 1; }
 
 python3 - <<'EOF'
-import glob, json, os, re, sys
+import glob, json, os, re, subprocess, sys
 
 REPO = "ysskrishna/claude-code-subagents-for-cursor"
 bad = 0
@@ -290,6 +290,20 @@ for prefix, guide in (("npx skills add ", "docs/install/skills-sh-setup.md"), ("
             err(f"{guide} does not contain the README command: {c}")
 if not bad:
     ok("required files, links and install commands")
+
+# 8. Effort mapping and cost-receipt unit tests (stdlib only; no live claude)
+test = "skills/use-claude-code-subagents/scripts/test_effort_receipt.py"
+if not os.path.isfile(test):
+    err(f"missing {test}")
+else:
+    r = subprocess.run([sys.executable, test], capture_output=True, text=True)
+    sys.stdout.write(r.stdout)
+    if r.stderr:
+        sys.stderr.write(r.stderr)
+    if r.returncode != 0:
+        err(f"{test} failed (exit {r.returncode})")
+    else:
+        ok("effort mapping and cost-receipt unit tests")
 
 sys.exit(bad)
 EOF

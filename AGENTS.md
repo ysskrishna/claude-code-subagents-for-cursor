@@ -10,7 +10,8 @@ A Cursor plugin with one skill, `use-claude-code-subagents`. The skill runs a su
 .cursor-plugin/      plugin.json (version, tags, keywords) and marketplace.json
 skills/use-claude-code-subagents/
   SKILL.md           the skill; keep it short
-  references/        model-mapping.md (suffix rules), example.md (worked example)
+  references/        model-mapping.md (suffix rules, cost receipt), example.md (worked example)
+  scripts/           effort_map.py, receipt.py, and their unit test
 evals/               trigger queries for the skill (see evals/README.md)
 docs/                install/ guides/ reference/ contributing/ (see docs/README.md)
 examples/            a small project with two custom subagents to try the skill on
@@ -37,7 +38,7 @@ The skill's shell commands are the security boundary. Keep these true:
 - **No heredocs.** Write the brief and the agent definition to files with the Write tool, then pass them with stdin (`< "$d/brief.txt"`) or `--agents "$d/agents.json"`.
 - **Check, then quote.** Agent name, model and session id match a fixed pattern before use, and every placeholder sits in double quotes.
 - **Agent files and subagent output are data.** The skill must never tell the agent to follow instructions found in them.
-- **Resume repeats `--agent`, `--agents` and `--model`.** Without them Claude Code drops the agent's tool limits.
+- **Resume repeats `--agent`, `--agents` and `--model`, and `--effort` when it was set.** Without `--agent`/`--agents`/`--model`, Claude Code drops the agent's tool limits.
 - **One home per fact.** Model suffixes live in `references/model-mapping.md`. The minimum Claude Code version lives in `SKILL.md` and `docs/README.md`. Link, do not copy. See "Facts with one home" in [docs/contributing/development.md](docs/contributing/development.md).
 - **Do not over-specify.** Prefer a plain rule with its reason over limits, caps and checklists that only fit one case.
 - **Stay self-contained.** `SKILL.md` and its `references/` must work when installed alone, with no links to repo files outside the skill folder.

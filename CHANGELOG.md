@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-18
+
+### Added
+
+- **Effort passthrough.** A Cursor model ID with an effort suffix (`-low`, `-medium`, `-high`, `-xhigh`, `-max`, `-thinking-<effort>`, or `[effort=...]`) now runs as `--model <base> --effort <level>` instead of losing the effort. `-fast` and bare `-thinking` are still dropped, as before.
+- **Cost receipt.** Every subagent run reports tokens and Claude Code's estimated cost next to the model it ran on, read from `modelUsage` and `total_cost_usd`. Those figures are client-side estimates, not a bill.
+
 ## [1.3.4] - 2026-11-14
 
 ### Fixed
@@ -125,6 +132,7 @@ First stable release.
 - **CI:** manifest and skill validation, install tests for the `skills` and `gh` routes, and a GitHub Release created from each `v*` tag.
 - `LICENSE`, `CODEOWNERS` and `FUNDING.yml`.
 
+[1.4.0]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/ysskrishna/claude-code-subagents-for-cursor/compare/v1.3.1...v1.3.2

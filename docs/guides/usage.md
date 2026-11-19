@@ -16,7 +16,7 @@ Cursor attaches a slash-invoked skill to that one message ([docs](https://cursor
 
 1. Pick a custom subagent whose `model:` differs from your chat's model.
 2. Run `/use-claude-code-subagents`, then ask the chat to run that agent on a small task.
-3. The reply ends with a line like `scout ran on claude-haiku-5-5`. That model comes from Claude Code's `modelUsage`, not from the agent file, so it shows what actually ran.
+3. The reply ends with a receipt line naming the model, tokens and estimated cost, for example `scout ran on claude-haiku-5-5 | claude-haiku-5-5: 2000 in / 300 out, $0.0123 | total $0.0123 (Claude Code client-side estimate)`. The model comes from Claude Code's `modelUsage`, not from the agent file, so it shows what actually ran. The cost is a client-side estimate, not a bill.
 
 A full worked run is in [`example.md`](../../skills/use-claude-code-subagents/references/example.md). To try it on a ready-made project, with one read-only and one editing agent, use [`examples/subagents`](../../examples/subagents).
 

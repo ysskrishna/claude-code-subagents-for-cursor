@@ -17,7 +17,9 @@ In Cursor, custom subagents (`.cursor/agents/*.md`, `.claude/agents/*.md`, `.cod
 - a **personal Anthropic API key (BYOK)** is on ([confirmed by Cursor staff](https://forum.cursor.com/t/opus-spawns-only-opus-subagents-despite-different-instructions/166870)), or
 - the agent's model is not enabled in Cursor.
 
-An agent you set up for Haiku then bills at Opus rates. Claude Code, run headlessly from Cursor's Shell tool, does honor the `model:` in agent files. This skill routes custom subagents through `claude -p` for the rest of the chat, and every run reports the model it actually ran on.
+An agent you set up for Haiku then bills at Opus rates. Claude Code, run headlessly from Cursor's Shell tool, does honor the `model:` in agent files. This skill routes custom subagents through `claude -p` for the rest of the chat, and every run reports the model it actually ran on, plus tokens and estimated cost.
+
+Cursor model IDs carry effort in the name (`claude-haiku-5-5-high`). Claude Code rejects those IDs. The skill strips the suffix and passes the level as `--effort`, so an "Opus low lead + Haiku high helpers" setup runs the way you wrote it.
 
 **You need:** Cursor desktop running locally (Cloud Agents have no `claude` CLI), Claude Code installed and signed in ([setup guide](https://code.claude.com/docs/en/setup)), and a POSIX shell (macOS, Linux). Runs bill your Claude Code account. The skill checks the Claude Code version for you.
 
@@ -96,7 +98,7 @@ Details: [docs/install/packages.md](docs/install/packages.md).
 /use-claude-code-subagents
 ```
 
-The agent replies `Subagent mode: claude code`. From then on, each custom subagent you ask for runs through Claude Code on its own model, and the reply ends with a line like `scout ran on claude-haiku-5-5`. Say **"use cursor subagents"** to switch back to Cursor's Task tool.
+The agent replies `Subagent mode: claude code`. From then on, each custom subagent you ask for runs through Claude Code on its own model, and the reply ends with a receipt line naming the model, tokens and estimated cost. Say **"use cursor subagents"** to switch back to Cursor's Task tool.
 
 More in [docs/guides/usage.md](docs/guides/usage.md): how the skill loads on its own, what to expect, and how to check it works. To try it on a ready-made project with two agents, see [examples/subagents](examples/subagents).
 

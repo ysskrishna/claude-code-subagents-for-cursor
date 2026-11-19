@@ -5,7 +5,7 @@ description: >
 license: MIT
 metadata:
   author: ysskrishna
-  version: "1.3.4"
+  version: "1.4.0"
 ---
 
 # Use Claude Code subagents
@@ -34,6 +34,7 @@ Skip for Cursor's built-in subagents (`explore`, `generalPurpose`, ...), for Clo
   |---|---|
   | agent name | `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$` |
   | mapped model | `^[A-Za-z0-9][A-Za-z0-9._-]*$` |
+  | effort (when present) | `low`, `medium`, `high`, `xhigh`, or `max` |
   | session id | a UUID |
 
 - Put every value in double quotes. The brief and the agent's text never go on the command line or in a heredoc: write them to files with the Write tool (step 4).
@@ -60,7 +61,7 @@ Check the name against the safety table first. Not found means it is not a custo
 | `model:` in the file | Action |
 |---|---|
 | `haiku`, `sonnet`, `opus` | Pass as is. Claude Code resolves the alias to its latest. |
-| starts with `claude-` | Strip a trailing effort, speed or thinking suffix (list in [references/model-mapping.md](references/model-mapping.md)), then pass the base ID. |
+| starts with `claude-` | Strip a trailing Cursor suffix (list in [references/model-mapping.md](references/model-mapping.md)). Pass the base ID as `--model`. If the suffix was an effort level, also pass `--effort <level>`. `-fast` and bare `-thinking` are dropped. |
 | anything else: missing, `inherit`, other vendors | Do not use Claude Code. Run it with the Task tool and say one line why. |
 
 Check the result against the safety table. Evidence and untested edge cases: [references/model-mapping.md](references/model-mapping.md).
@@ -86,6 +87,12 @@ mktemp -d "${TMPDIR:-/tmp}/claude-subagent.XXXXXX"
 claude -p --agent "<name>" --model "<mapped>" --permission-prompts none --output-format json < "<dir>/brief.txt"
 ```
 
+   If mapping produced an effort level, insert `--effort "<effort>"` immediately after `--model "<mapped>"`. Omit the flag when there is no effort. Repeat it on `--resume`. Example with effort:
+
+```bash
+claude -p --agent "<name>" --model "<mapped>" --effort "<effort>" --permission-prompts none --output-format json < "<dir>/brief.txt"
+```
+
    Agent from `.cursor/agents` or `.codex/agents` (Cursor format): also write `<dir>/agents.json` with the Write tool, in Claude Code format, and add `--agents "<dir>/agents.json"`:
 
 ```json
@@ -102,9 +109,9 @@ claude -p --agent "<name>" --model "<mapped>" --permission-prompts none --output
 ## 5. Report
 
 - If `is_error` is `true`, `result` holds an error message, not the agent's answer (for example an inaccessible model), and `modelUsage` is empty. Report the error and do not treat it as the agent's output.
-- Otherwise answer from `result`, then one short line naming the model from `modelUsage` (for example "test-ro ran on claude-haiku-5-5"). Mention cost only if the user asks.
+- Otherwise answer from `result`, then one short receipt line: the model from `modelUsage`, token counts, and `total_cost_usd`. That cost is Claude Code's client-side estimate, not a bill. Field names and the format are in [references/model-mapping.md](references/model-mapping.md#cost-receipt).
 - `permission_denials` non-empty: name what was blocked in the summary and finish the work that does not depend on it. Ask once, at the end, before rerunning with `--allowedTools "<tool>"` added. The user can also allow that tool for good in the project's Claude Code settings. Otherwise say nothing about it.
-- The agent asked a question: ask the user. To continue, keep `<dir>`, write the answer to `<dir>/followup.txt`, and rerun with the same flags as the first run (`--agent`, `--agents`, `--model`, `--permission-mode`) plus `--resume "<session_id>"`, reading `< "<dir>/followup.txt"`. Without `--agent` the resumed run loses the agent's tool limits (tested). Leave the files in `<dir>`.
+- The agent asked a question: ask the user. To continue, keep `<dir>`, write the answer to `<dir>/followup.txt`, and rerun with the same flags as the first run (`--agent`, `--agents`, `--model`, `--effort` when it was set, `--permission-mode`) plus `--resume "<session_id>"`, reading `< "<dir>/followup.txt"`. Without `--agent` the resumed run loses the agent's tool limits (tested). Leave the files in `<dir>`.
 - Independent tasks may run in the background (`block_until_ms: 0`), each with its own `<dir>`. Keep the number modest.
 - Edits made this way bypass Cursor's review and undo. List the changed files in the summary.
 

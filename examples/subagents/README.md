@@ -32,7 +32,7 @@ You find things in this project and report back. You never edit files.
 1. Install the skill ([README](../../README.md#installation)) and make sure `claude` is installed and signed in.
 2. Open this folder (`examples/subagents`) as the project in Cursor, so Cursor finds `.cursor/agents`. To use the agents in your own project, copy `.cursor/agents/*.md` into that project's `.cursor/agents/`, or into `~/.cursor/agents/` for every project.
 3. In a chat, run `/use-claude-code-subagents`, then ask:
-   - `use scout to find where retries are configured`. It should return `config/retry.yaml` and `notes/retry-plan.md`, and the reply ends with a line such as `scout ran on claude-haiku-5-5`.
+   - `use scout to find where retries are configured`. It should return `config/retry.yaml` and `notes/retry-plan.md`, and the reply ends with a receipt line naming the model, tokens and estimated cost.
    - `use proofreader to fix typos in notes/retry-plan.md`. It fixes the typos (`erors`, `Teh`) and lists the file it changed. Review the change: edits made this way bypass Cursor's review and undo. Run `git diff` to see it, and `git checkout -- notes/retry-plan.md` to put the typos back.
 
 Each run is a terminal command, not a Cursor subagent card. [Usage](../../docs/guides/usage.md) says what to expect.
